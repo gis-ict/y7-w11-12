@@ -1,0 +1,868 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y7 Design Project: Plan to Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e3e9ef; --card:#f6f8fa; --white:#fdfdfe;
+  --ink:#3b4049; --soft:#6f7682; --faint:#9aa2ad; --line:#cfd7df;
+  --blue:#2b7fe6; --indigo:#3a2df0; --grad:linear-gradient(100deg,#2b8de6 0%,#3a2df0 100%);
+  --ok:#17a174; --okbg:#e3f5ee; --bad:#d9435a; --badbg:#fbe8eb; --hl:#e6efff;
+  --rise:16px 16px 36px rgba(160,174,194,.55),-12px -12px 30px rgba(255,255,255,.95);
+  --rise-s:8px 8px 18px rgba(160,174,194,.5),-6px -6px 14px rgba(255,255,255,.95);
+  --sink:inset 4px 4px 10px rgba(160,174,194,.45),inset -4px -4px 10px rgba(255,255,255,.9);
+  --mono:Consolas,"Cascadia Mono","Courier New",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.55 Montserrat,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:rgba(227,233,239,.92);backdrop-filter:blur(8px)}
+.hbar{display:flex;align-items:center;gap:18px;padding:14px 0}
+.brand{font-weight:600;font-size:15px;color:var(--soft);line-height:1.25;min-width:150px}
+.brand b{display:block;color:var(--ink);font-size:17px}
+nav{display:flex;gap:12px;flex:1;justify-content:center;flex-wrap:wrap}
+.tile{width:74px;height:70px;border-radius:24px;border:1.5px solid #8f97a2;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:500;color:var(--soft);position:relative;transition:box-shadow .2s,background .2s}
+.tile svg{width:24px;height:24px;fill:#8a919c}
+.tile.on{background:var(--white);border-color:transparent;box-shadow:var(--rise-s);color:var(--ink)}
+.tile.on svg{fill:var(--blue)}
+.tile .tick{position:absolute;top:-5px;right:-5px;width:20px;height:20px;border-radius:50%;background:var(--ok);color:#fff;font-size:12px;line-height:20px;display:none}
+.tile.done .tick{display:block}
+.toggle{display:flex;align-items:center;gap:10px;background:var(--white);border:0;border-radius:999px;padding:6px 6px 6px 14px;box-shadow:var(--rise-s);font-size:13px;font-weight:600;color:var(--soft)}
+.sw{width:58px;height:32px;border-radius:999px;background:#d5dce4;position:relative;box-shadow:var(--sink);transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:var(--white);box-shadow:2px 2px 6px rgba(120,130,150,.5);transition:left .2s}
+.toggle[aria-pressed="true"] .sw{background:var(--grad)}
+.toggle[aria-pressed="true"] .sw::after{left:29px}
+
+/* parts */
+main{padding:18px 0 60px}
+section.part{display:none}
+section.part.on{display:block}
+.card{background:var(--card);border-radius:36px;box-shadow:var(--rise);padding:30px 34px}
+.head{display:flex;align-items:flex-start;gap:18px;margin-bottom:22px}
+.head .t{flex:1}
+.step{font-size:14px;color:var(--soft);font-weight:600}
+h1{font-size:40px;font-weight:500;margin:4px 0 8px;line-height:1.15;letter-spacing:-.01em}
+h2{font-size:30px;font-weight:500;margin:2px 0 6px;line-height:1.2}
+h3{font-size:17px;font-weight:600;margin:0 0 10px}
+.do{margin:0;font-size:16.5px;max-width:70ch;color:var(--ink)}
+.speak{flex:none;width:58px;height:58px;border-radius:50%;border:0;background:var(--white);box-shadow:var(--rise-s);display:grid;place-items:center}
+.speak svg{width:26px;height:26px;fill:var(--blue)}
+.speak.playing{background:var(--grad)}
+.speak.playing svg{fill:#fff}
+
+.pill{border:0;border-radius:999px;padding:13px 30px;font-weight:600;font-size:16px;background:var(--white);box-shadow:var(--rise-s);color:var(--ink)}
+.pill.go{background:var(--grad);color:#fff;box-shadow:8px 10px 22px rgba(58,45,240,.28),-6px -6px 14px rgba(255,255,255,.9)}
+.pill:disabled{opacity:.45;cursor:not-allowed}
+.pill.sm{padding:9px 20px;font-size:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.foot{display:flex;justify-content:space-between;margin-top:26px}
+
+/* panels */
+.panel{background:var(--white);border-radius:22px;box-shadow:var(--rise-s);padding:16px 18px;min-width:0}
+.ptitle{font-size:13.5px;font-weight:600;color:var(--soft);margin:0 0 8px}
+.code{font:15px/1.75 var(--mono);margin:0;white-space:pre;overflow-x:auto}
+.code .ln{display:block;border-radius:8px;padding:0 8px;transition:background .2s}
+.code .ln.hl{background:var(--hl);box-shadow:inset 3px 0 0 var(--blue)}
+.code .ln.errl{background:var(--badbg);box-shadow:inset 3px 0 0 var(--bad)}
+.k{color:#3a2df0;font-weight:600}.f{color:#7a3fb8}.s{color:#16835f}.n{color:#c25a00}.cm{color:var(--faint)}
+.pseudo{font:14.5px/1.75 var(--mono);margin:0;white-space:pre}
+.pseudo .ln{display:block;border-radius:8px;padding:0 8px}
+.pseudo .ln.hl{background:var(--hl);box-shadow:inset 3px 0 0 var(--blue)}
+.pk{font-weight:700;color:#3a2df0}
+
+.console{background:#232733;color:#e8ebf2;border-radius:18px;padding:14px 16px;font:14.5px/1.6 var(--mono);min-height:120px;max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.console .in{color:#7fd3ff}
+.console .err{color:#ff8f9f}
+.console .note{color:#9aa3b5;font-style:italic}
+.console .okn{color:#8fe3b8}
+.console input{background:transparent;border:0;border-bottom:1.5px solid #7fd3ff;color:#7fd3ff;font:inherit;width:14ch;outline:none}
+
+/* goals + timeline */
+.goals{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:6px 0 26px}
+.goal{background:var(--white);border-radius:22px;padding:16px 18px;box-shadow:var(--rise-s);display:flex;gap:12px;align-items:flex-start;font-size:15.5px}
+.goal i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--grad);color:#fff;font-style:normal;font-weight:600;display:grid;place-items:center;font-size:14px}
+.brief{background:var(--white);border-radius:22px;padding:16px 20px;box-shadow:var(--sink);margin-bottom:26px;font-size:15.5px}
+.tl{background:var(--white);border-radius:30px;box-shadow:var(--rise-s);padding:30px 30px 18px;margin-bottom:24px}
+.tlbar{position:relative;height:8px;border-radius:8px;background:#d9e0e8;margin:0 40px}
+.tlfill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:var(--grad);transition:width .4s}
+.tlstops{display:flex;justify-content:space-between;margin:-21px 18px 0;position:relative}
+.stop{display:flex;flex-direction:column;align-items:center;gap:12px;background:none;border:0;padding:0;min-width:70px}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--white);box-shadow:var(--rise-s);display:grid;place-items:center}
+.dot::after{content:"";width:16px;height:16px;border-radius:50%;background:#c3cbd5}
+.stop.done .dot::after{background:var(--grad)}
+.chip{border-radius:14px;padding:7px 14px;font-size:14px;background:var(--white);box-shadow:var(--rise-s);color:var(--soft)}
+.stop.done .chip{background:var(--grad);color:#fff}
+
+/* part 1 */
+.p1grid{display:grid;grid-template-columns:.95fr .8fr 1.25fr;gap:18px;align-items:start}
+.flow svg{width:100%;height:auto;display:block}
+.fn rect,.fn polygon,.fn path{fill:#f1f4f8;stroke:#9aa3ae;stroke-width:1.4;transition:fill .2s,stroke .2s}
+.fn text{font:600 10.5px Montserrat,sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
+.fn.hl rect,.fn.hl polygon,.fn.hl path{fill:#dfe9ff;stroke:var(--indigo);stroke-width:2.4}
+.fl{stroke:#9aa3ae;stroke-width:1.4;fill:none}
+.flab{font:600 9.5px Montserrat,sans-serif;fill:var(--soft)}
+.ctrl{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;margin-top:18px}
+.field{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600;color:var(--soft)}
+.tbox{border:0;border-radius:16px;padding:11px 16px;background:var(--card);box-shadow:var(--sink);font-size:16px;font-weight:500;color:var(--ink);width:100%}
+.topics{display:flex;gap:8px;flex-wrap:wrap}
+.tb{border:0;border-radius:14px;padding:8px 14px;background:var(--white);box-shadow:var(--rise-s);font-size:14.5px;font-weight:500}
+.tb[aria-pressed="true"]{background:var(--grad);color:#fff}
+.found{font-size:14px;color:var(--soft);margin-top:10px}
+
+/* part 2 */
+.tabs{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.tab{border:0;border-radius:20px;padding:12px 20px;background:transparent;border:1.5px solid #9aa2ad;font-weight:600;color:var(--soft);display:flex;align-items:center;gap:10px}
+.tab.on{background:var(--white);border-color:transparent;box-shadow:var(--rise-s);color:var(--ink)}
+.tab .cnt{font-size:12.5px;border-radius:10px;padding:2px 8px;background:#dfe5ec;color:var(--soft)}
+.tab.full .cnt{background:var(--ok);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.replies{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.reply{display:flex;align-items:center;gap:10px;border-radius:14px;padding:9px 14px;background:var(--card);box-shadow:var(--sink);font-size:14.5px;color:var(--faint)}
+.reply b{flex:none;width:22px;height:22px;border-radius:50%;background:#d3dae2;display:grid;place-items:center;font-size:12px;color:#fff}
+.reply.got{color:var(--ink);background:var(--okbg);box-shadow:none}
+.reply.got b{background:var(--ok)}
+
+/* part 3 */
+.fill{font:15.5px/2.25 var(--mono);white-space:pre;margin:0;overflow-x:auto}
+.fill select{font:600 15px var(--mono);border:0;border-radius:10px;padding:3px 6px;background:#eef2ff;box-shadow:var(--sink);color:var(--indigo)}
+.fill select.ok{background:var(--okbg);color:var(--ok);box-shadow:none}
+.fill select.no{background:var(--badbg);color:var(--bad);box-shadow:none}
+.msg{margin:14px 0 0;font-weight:600;font-size:15px;min-height:1.4em}
+.msg.ok{color:var(--ok)}.msg.no{color:var(--bad)}
+
+/* part 4 */
+.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.pl{display:flex;align-items:center;gap:8px;background:var(--white);border-radius:14px;box-shadow:var(--rise-s);padding:5px 6px 5px 12px;font:14.5px/1.5 var(--mono);cursor:grab;white-space:pre;user-select:none}
+.pl.drag{opacity:.4}
+.pl.ok{background:var(--okbg);box-shadow:none}
+.pl.no{background:var(--badbg);box-shadow:none}
+.pl .txt{flex:1;min-width:0;overflow-x:auto}
+.two>*,.p1grid>*,.ctrl>*,.goals>*{min-width:0}
+.pl .mv{flex:none;border:0;background:var(--card);border-radius:10px;width:32px;height:30px;box-shadow:var(--rise-s);font-size:14px;color:var(--soft)}
+
+/* part 5 */
+.p5top{display:flex;gap:22px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:600;color:#7a808a}
+.ring .v small{font-size:13px}
+.bugs{display:flex;gap:10px;flex-wrap:wrap}
+.bt{width:54px;height:54px;border-radius:18px;border:1.5px solid #9aa2ad;background:transparent;font-weight:600;color:var(--soft);position:relative}
+.bt.on{background:var(--white);border-color:transparent;box-shadow:var(--rise-s);color:var(--ink)}
+.bt.done{background:var(--grad);color:#fff;border-color:transparent}
+.ed{display:flex;border-radius:18px;background:var(--white);box-shadow:var(--sink);overflow:hidden}
+.gut{flex:none;padding:12px 0;background:#eef1f5;font:15px/1.7 var(--mono);color:var(--faint);text-align:right;user-select:none}
+.gut span{display:block;padding:0 10px 0 14px}
+.gut span.errl{background:var(--bad);color:#fff}
+.ed textarea{flex:1;border:0;resize:vertical;min-height:150px;padding:12px 14px;font:15px/1.7 var(--mono);background:transparent;outline:none;white-space:pre;overflow-x:auto;tab-size:4}
+.hint{margin-top:12px;border-radius:16px;padding:12px 16px;background:#fff6dd;font-size:15px;display:none}
+.hint.on{display:block}
+
+/* teacher */
+.tnote{display:none}
+body.teacher .tnote{display:block;margin-top:24px;border-radius:22px;padding:16px 20px;background:#fff8e6;border:1.5px dashed #d6a93a;font-size:14.5px}
+.tnote h4{margin:0 0 6px;font-size:14px;color:#9a6b00}
+.tnote p,.tnote li{margin:4px 0}
+.tonly{display:none!important}
+body.teacher .tonly{display:inline-block!important}
+
+.loading{font-size:13.5px;color:var(--soft);margin-left:4px}
+@media (max-width:980px){
+  .p1grid{grid-template-columns:1fr 1fr}.p1grid .pyp{grid-column:1/-1}
+  .two,.ctrl,.goals{grid-template-columns:1fr}
+  .brand{display:none}
+}
+@media (max-width:620px){
+  .wrap{padding:0 14px}.card{padding:22px 18px;border-radius:28px}
+  .p1grid{grid-template-columns:1fr}
+  h1{font-size:30px}h2{font-size:24px}
+  .tile{width:52px;height:52px;border-radius:18px;font-size:0;gap:0}
+  .toggle span.lbl{display:none}
+  .tlbar{margin:0 22px}.tlstops{margin:-21px 0 0}.stop{min-width:0}.chip{font-size:11px;padding:5px 7px}
+  .speak{width:48px;height:48px}
+  .pl{font-size:12.5px}.code,.pseudo,.fill{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap hbar">
+  <div class="brand"><b>Design Project</b>Plan to program</div>
+  <nav id="nav" aria-label="Lesson parts"></nav>
+  <button class="toggle" id="auto" aria-pressed="false" title="Read each part aloud when you open it"><span class="lbl">Read aloud</span><span class="sw"></span></button>
+</div></header>
+
+<main class="wrap">
+
+<!-- START -->
+<section class="part" id="p0" data-n="0">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Year 7 Digital Technologies</div>
+    <h1>From plan to program</h1>
+    <p class="do">Today you practise turning pseudocode into Python, testing it and fixing errors. On Thursday you use these skills to build your own program in Thonny.</p>
+  </div><button class="speak" data-clip="intro" aria-label="Listen to the introduction"></button></div>
+
+  <div class="brief"><b>Your design brief:</b> a helpful text program for new GIS pupils. It can be a quiz, a phrase translator or an info-bot.</div>
+
+  <h3>By the end of this hour</h3>
+  <div class="goals">
+    <div class="goal"><i>1</i>I can match each line of Python to its pseudocode and flowchart.</div>
+    <div class="goal"><i>2</i>I can test a program by trying different inputs.</div>
+    <div class="goal"><i>3</i>I can complete and order code using pseudocode as my guide.</div>
+    <div class="goal"><i>4</i>I can read an error message and fix the bug.</div>
+  </div>
+
+  <div class="tl" aria-label="Your progress">
+    <div class="tlbar"><div class="tlfill" id="tlfill" style="width:0"></div></div>
+    <div class="tlstops" id="tlstops"></div>
+  </div>
+  <div class="row"><button class="pill go" data-go="1">Start Part 1</button></div>
+
+  <div class="tnote"><h4>Teacher notes: start (3 min)</h4>
+   <p>Read the four goals aloud. If students use the voice, they need headphones; otherwise leave Read aloud off and let them press the speaker button on each part.</p>
+   <p>Hour plan: Part 1 (8 min), Part 2 (10), Part 3 (10), Part 4 (10), Part 5 (15), wrap-up (4). Fast finishers can go back to Part 2 and find the replies they missed.</p>
+   <p>This page loads Python in the background. Give it about 20 seconds on the school network before Part 2.</p>
+  </div>
+ </div>
+</section>
+
+<!-- PART 1 -->
+<section class="part" id="p1" data-n="1">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Part 1 of 5</div>
+    <h2>Follow the GIS Helper</h2>
+    <p class="do">Type a name, choose a topic, then press <b>Step</b>. Watch the same line light up in the pseudocode, the flowchart and the Python.</p>
+  </div><button class="speak" data-clip="p1" aria-label="Listen to the Part 1 instructions"></button></div>
+
+  <div class="p1grid">
+    <div class="panel"><p class="ptitle">Pseudocode</p><div class="pseudo" id="ps1"></div></div>
+    <div class="panel flow"><p class="ptitle">Flowchart</p><div id="fc1"></div></div>
+    <div class="panel pyp"><p class="ptitle">Python</p><div class="code" id="py1"></div></div>
+  </div>
+
+  <div class="ctrl">
+    <div class="panel">
+      <label class="field">Your name<input class="tbox" id="nm1" value="Mali" maxlength="20"></label>
+      <div class="field" style="margin-top:12px">Topic to ask about
+        <div class="topics" id="tp1"></div></div>
+      <div class="row" style="margin-top:16px">
+        <button class="pill go sm" id="st1">Step</button>
+        <button class="pill sm" id="ra1">Run to the end</button>
+        <button class="pill sm" id="rs1">Start again</button>
+      </div>
+      <p class="found" id="f1">Topics followed to the end: 0 of 2 needed</p>
+    </div>
+    <div><p class="ptitle">Output</p><div class="console" id="c1" aria-live="polite"></div></div>
+  </div>
+
+  <div class="foot"><button class="pill" data-go="0">Back</button><button class="pill go" data-go="2">Next: Part 2</button></div>
+  <div class="tnote"><h4>Teacher notes: Part 1 (8 min)</h4>
+   <p>Goal: one pseudocode line becomes one Python line. Ask: "Which Python line matches ELSE IF?" and "Pseudocode has END IF. Where is that in Python?" (Python uses indentation instead.)</p>
+   <p>The "something else" topic sends the program down the ELSE path. Students tick this part off after following two different topics to the end.</p>
+  </div>
+ </div>
+</section>
+
+<!-- PART 2 -->
+<section class="part" id="p2" data-n="2">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Part 2 of 5</div>
+    <h2>Test three programs</h2>
+    <p class="do">Press <b>Run</b> and be the user. Find every reply each program can give. Try unusual answers too.</p>
+  </div><button class="speak" data-clip="p2" aria-label="Listen to the Part 2 instructions"></button></div>
+  <div class="tabs" id="tabs2"></div>
+  <div class="two">
+    <div class="panel"><p class="ptitle" id="ttl2">Python</p><div class="code" id="py2"></div>
+      <div class="replies" id="rep2"></div></div>
+    <div>
+      <div class="row" style="margin-bottom:10px"><button class="pill go sm" id="run2">Run</button><span class="loading" id="ld2"></span></div>
+      <div class="console" id="c2" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="foot"><button class="pill" data-go="1">Back</button><button class="pill go" data-go="3">Next: Part 3</button></div>
+  <div class="tnote"><h4>Teacher notes: Part 2 (10 min)</h4>
+   <p>This is testing: trying inputs on purpose to reach every branch. It is exactly what students do with their users in Week 11.</p>
+   <ul><li>Quiz: "vientiane" in lower case is marked wrong. Ask why, and how a user would feel.</li>
+   <li>Library: typing "two" instead of 2 crashes with ValueError. Ask what <code>int()</code> needs.</li>
+   <li>Lao phrases: "Hello" with a capital H is not recognised.</li></ul>
+  </div>
+ </div>
+</section>
+
+<!-- PART 3 -->
+<section class="part" id="p3" data-n="3">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Part 3 of 5</div>
+    <h2>Fill in the missing code</h2>
+    <p class="do">Read the pseudocode, then choose the right word in each box. Press <b>Check</b>.</p>
+  </div><button class="speak" data-clip="p3" aria-label="Listen to the Part 3 instructions"></button></div>
+  <div class="two">
+    <div class="panel"><p class="ptitle">Pseudocode: Club finder</p><div class="pseudo" id="ps3"></div></div>
+    <div class="panel"><p class="ptitle">Python</p><div class="fill" id="fill3"></div>
+      <div class="row" style="margin-top:14px"><button class="pill go sm" id="chk3">Check</button><button class="pill sm" id="run3" disabled>Run it</button><button class="pill sm tonly" id="ans3">Show answer</button></div>
+      <p class="msg" id="msg3"></p></div>
+  </div>
+  <div class="console" id="c3" style="margin-top:18px;display:none" aria-live="polite"></div>
+  <div class="foot"><button class="pill" data-go="2">Back</button><button class="pill go" data-go="4">Next: Part 4</button></div>
+  <div class="tnote"><h4>Teacher notes: Part 3 (10 min)</h4>
+   <p>Answers: input, if, ==, elif, else, f, name.</p>
+   <p>Common slips: = instead of == (= stores, == compares) and "else if" instead of elif. Wrong boxes turn red; students change them and check again.</p>
+  </div>
+ </div>
+</section>
+
+<!-- PART 4 -->
+<section class="part" id="p4" data-n="4">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Part 4 of 5</div>
+    <h2>Put the GIS Helper in order</h2>
+    <p class="do">The lines are mixed up. Use the pseudocode to put them back in order. Drag a line or use the arrows, then press <b>Check</b>.</p>
+  </div><button class="speak" data-clip="p4" aria-label="Listen to the Part 4 instructions"></button></div>
+  <div class="two">
+    <div class="panel"><p class="ptitle">Pseudocode</p><div class="pseudo" id="ps4"></div></div>
+    <div><ul class="plist" id="pl4"></ul>
+      <div class="row" style="margin-top:16px"><button class="pill go sm" id="chk4">Check</button><button class="pill sm" id="run4" disabled>Run it</button><button class="pill sm" id="mix4">Mix again</button><button class="pill sm tonly" id="ans4">Show answer</button></div>
+      <p class="msg" id="msg4"></p></div>
+  </div>
+  <div class="console" id="c4" style="margin-top:18px;display:none" aria-live="polite"></div>
+  <div class="foot"><button class="pill" data-go="3">Back</button><button class="pill go" data-go="5">Next: Part 5</button></div>
+  <div class="tnote"><h4>Teacher notes: Part 4 (10 min)</h4>
+   <p>Indentation is already set, so students only think about order. Tip for stuck students: find the INPUT lines first, then the IF chain, then the last OUTPUT.</p>
+  </div>
+ </div>
+</section>
+
+<!-- PART 5 -->
+<section class="part" id="p5" data-n="5">
+ <div class="card">
+  <div class="head"><div class="t">
+    <div class="step">Part 5 of 5</div>
+    <h2>Fix five bugs</h2>
+    <p class="do">Press <b>Run</b> and read the error. Fix the code, then run it again. Each fix is worth 20 points. A hint costs 5.</p>
+  </div><button class="speak" data-clip="p5" aria-label="Listen to the Part 5 instructions"></button></div>
+  <div class="p5top">
+    <div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#2b8de6"/><stop offset="1" stop-color="#3a2df0"/></linearGradient></defs>
+      <circle cx="60" cy="60" r="50" fill="none" stroke="#dbe1e8" stroke-width="10"/>
+      <circle id="ringc" cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" style="transition:stroke-dashoffset .5s"/></svg>
+      <div class="v"><span id="pts">0<small> pts</small></span></div></div>
+    <div><p class="ptitle">Bugs</p><div class="bugs" id="bugs"></div></div>
+  </div>
+  <div class="two">
+    <div>
+      <p class="ptitle" id="bt5">Bug 1</p>
+      <div class="ed"><div class="gut" id="gut5"></div><textarea id="ed5" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code to fix"></textarea></div>
+      <div class="row" style="margin-top:14px"><button class="pill go sm" id="run5">Run</button><button class="pill sm" id="hint5">Hint (−5)</button><button class="pill sm" id="reset5">Reset code</button><button class="pill sm tonly" id="ans5">Show answer</button><span class="loading" id="ld5"></span></div>
+      <div class="hint" id="h5"></div>
+    </div>
+    <div><p class="ptitle">Output</p><div class="console" id="c5" aria-live="polite"></div>
+      <p class="msg" id="msg5"></p></div>
+  </div>
+  <div class="foot"><button class="pill" data-go="4">Back</button><button class="pill go" data-go="0">Finish</button></div>
+  <div class="tnote"><h4>Teacher notes: Part 5 (15 min) and wrap-up (4 min)</h4>
+   <ol><li>Missing colon after the if line (SyntaxError: expected ':').</li>
+   <li>= instead of == in the if (SyntaxError: invalid syntax).</li>
+   <li>The print under if is not indented (IndentationError).</li>
+   <li>Typo: nmae instead of name (NameError).</li>
+   <li>input() gives text, so wrap it in int() (TypeError).</li></ol>
+   <p>Do Bug 1 together on the board first: read the line number, then the message. Write the five error names on the board as the help-desk board for Thursday.</p>
+   <p>Wrap-up: "Which error message helped you most, and why?" Then tell them Thursday they build their own program in Thonny from their pseudocode, saving a new version after each milestone.</p>
+  </div>
+ </div>
+</section>
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem('y7dp2_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y7dp2_'+k,JSON.stringify(v))}catch(e){}}};
+const TEACHER=/(^|[?&#])teacher(\b|=|$)/i.test(location.search+location.hash);
+if(TEACHER){document.body.classList.add('teacher');document.title+=' (Teacher)'}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+/* ---------- syntax colouring ---------- */
+function hlPy(line){
+  const re=/(f?"(?:[^"\\]|\\.)*")|\b(if|elif|else)\b|\b(input|print|int)\b|\b(\d+)\b/g;
+  let out='',i=0,m;
+  while((m=re.exec(line))){out+=esc(line.slice(i,m.index));
+    if(m[1])out+=`<span class="s">${esc(m[1])}</span>`;else if(m[2])out+=`<span class="k">${m[2]}</span>`;
+    else if(m[3])out+=`<span class="f">${m[3]}</span>`;else out+=`<span class="n">${m[4]}</span>`;i=re.lastIndex}
+  return out+esc(line.slice(i));
+}
+function hlPs(line){return esc(line).replace(/\b(INPUT|OUTPUT|IF|THEN|ELSE|END IF)\b/g,'<span class="pk">$1</span>')}
+function renderCode(el,src,fn){el.innerHTML=src.split('\n').map((l,i)=>`<span class="ln" data-l="${i+1}">${fn(l)||' '}</span>`).join('')}
+function mark(el,n,cls='hl'){el.querySelectorAll('.ln').forEach(x=>x.classList.toggle(cls,+x.dataset.l===n))}
+
+/* ---------- progress ---------- */
+const done=store.get('done',{});
+const NAMES=['Start','Follow','Test','Fill','Order','Fix'];
+const ICONS=[
+ '<path d="M12 3 2 11.5h3V21h5.5v-6h3v6H19v-9.5h3z"/>',
+ '<path d="M8 5v14l11-7z"/>',
+ '<path d="M9 2h6v2h-1v5.2l5.6 9.4A2 2 0 0 1 17.9 22H6.1a2 2 0 0 1-1.7-3.4L10 9.2V4H9zm3.5 9h-1l-2.4 4h5.8z"/>',
+ '<path d="M3 5h18v6H3zm2 2v2h9V7zm12 .5 1.5 1.5L20 7.5zM3 14h18v5H3z"/>',
+ '<path d="M7 3 2 8h3.5v8h3V8H12zm10 18 5-5h-3.5V8h-3v8H12z"/>',
+ '<path d="M14.6 3.2 13.2 5A5 5 0 0 1 16 8h2a7 7 0 0 0-3.4-4.8zM9.4 3.2A7 7 0 0 0 6 8h2a5 5 0 0 1 2.8-3zM7 9v5a5 5 0 0 0 10 0V9zM2 11h4v2H2zm16 0h4v2h-4zM3 17l3-1 .7 1.9-3 1zm18 0-.7 1.9-3-1 .7-1.9z"/>'];
+$('#nav').innerHTML=NAMES.map((n,i)=>`<button class="tile" data-go="${i}" aria-label="${i?'Part '+i+': ':''}${n}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[i]}</svg>${n}<span class="tick" aria-hidden="true">✓</span></button>`).join('');
+$('#tlstops').innerHTML=NAMES.slice(1).map((n,i)=>`<button class="stop" data-go="${i+1}"><span class="dot"></span><span class="chip">${i+1} ${n}</span></button>`).join('');
+function finish(n){if(done[n])return;done[n]=1;store.set('done',done);paintProgress()}
+function paintProgress(){
+  $$('.tile').forEach((t,i)=>t.classList.toggle('done',!!done[i]));
+  $$('.stop').forEach((t,i)=>t.classList.toggle('done',!!done[i+1]));
+  const c=[1,2,3,4,5].filter(i=>done[i]).length;$('#tlfill').style.width=(c/5*100)+'%';
+}
+
+/* ---------- navigation + voice ---------- */
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+const STOP='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6h3.5v12H7zm6.5 0H17v12h-3.5z"/></svg>';
+$$('.speak').forEach(b=>b.innerHTML=SPK);
+const audio=new Audio();let speakingBtn=null;
+function stopVoice(){audio.pause();if(speakingBtn){speakingBtn.classList.remove('playing');speakingBtn.innerHTML=SPK}speakingBtn=null}
+function play(btn){
+  if(speakingBtn===btn){stopVoice();return}
+  stopVoice();audio.src='audio/'+btn.dataset.clip+'.mp3';
+  audio.play().then(()=>{speakingBtn=btn;btn.classList.add('playing');btn.innerHTML=STOP}).catch(()=>{});
+}
+audio.onended=stopVoice;
+$$('.speak').forEach(b=>b.onclick=()=>play(b));
+const auto=$('#auto');auto.setAttribute('aria-pressed',store.get('auto',false)?'true':'false');
+auto.onclick=()=>{const on=auto.getAttribute('aria-pressed')!=='true';auto.setAttribute('aria-pressed',on);store.set('auto',on);if(on)play($('section.part.on .speak'));else stopVoice()};
+
+let cur=-1;
+function go(n,user){
+  n=+n;if(n===cur)return;cur=n;stopVoice();
+  $$('section.part').forEach(s=>s.classList.toggle('on',+s.dataset.n===n));
+  $$('.tile').forEach((t,i)=>{t.classList.toggle('on',i===n);t.toggleAttribute('aria-current',i===n)});
+  store.set('part',n);window.scrollTo(0,0);
+  if(user&&auto.getAttribute('aria-pressed')==='true')play($(`#p${n} .speak`));
+  if(n>=2)loadPy();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go,true)});
+
+/* ---------- Python (Pyodide) ---------- */
+const HARNESS=`
+import sys, json, traceback
+class _Need(Exception): pass
+class _Long(Exception): pass
+def _run(src, feed_json):
+    feed = json.loads(feed_json)
+    ev = []
+    class W:
+        def write(self, s):
+            if s: ev.append([s, "out"])
+        def flush(self): pass
+    count = [0]
+    def tracer(f, e, a):
+        if f.f_code.co_filename == "<code>" and e == "line":
+            count[0] += 1
+            if count[0] > 100000: raise _Long()
+        return tracer
+    def inp(prompt=""):
+        prompt = str(prompt)
+        ev.append([prompt, "out"])
+        if not feed: raise _Need(prompt)
+        v = feed.pop(0)
+        ev.append([v + "\\n", "in"])
+        return v
+    status, err, line = "done", None, None
+    old = sys.stdout, sys.stderr
+    sys.stdout = W(); sys.stderr = W()
+    try:
+        code = compile(src, "<code>", "exec")
+        sys.settrace(tracer)
+        exec(code, {"__name__": "__main__", "input": inp})
+    except _Need:
+        status = "need"
+    except _Long:
+        status, err = "error", "The program ran for too long."
+    except SyntaxError as e:
+        status, line, err = "error", e.lineno, f"{type(e).__name__}: {e.msg}"
+    except Exception as e:
+        tb = [f.lineno for f in traceback.extract_tb(e.__traceback__) if f.filename == "<code>"]
+        status, line, err = "error", (tb[-1] if tb else None), f"{type(e).__name__}: {e}"
+    finally:
+        sys.settrace(None)
+        sys.stdout, sys.stderr = old
+    return json.dumps({"ev": ev, "status": status, "err": err, "line": line})
+`;
+let pyP=null;
+function loadPy(){
+  if(pyP)return pyP;
+  pyP=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';
+    s.onload=async()=>{try{const py=await loadPyodide();py.runPython(HARNESS);res(py)}catch(e){rej(e)}};
+    s.onerror=()=>rej(new Error('load'));document.head.appendChild(s)});
+  pyP.catch(()=>{pyP=null});
+  return pyP;
+}
+async function pyRun(src,feed){
+  const py=await loadPy();
+  return JSON.parse(py.globals.get('_run')(src,JSON.stringify(feed)));
+}
+function waitMsg(el,on){if(el)el.textContent=on?'Getting Python ready…':''}
+
+/* interactive console: re-runs from the top with the answers so far */
+function Console(el,opts={}){
+  let src='',feed=[],busy=false;
+  const api={
+    async start(code){src=code;feed=[];await step()},
+    text(){return el.textContent},
+    onDone:null
+  };
+  async function step(){
+    if(busy)return;busy=true;waitMsg(opts.loading,true);
+    let r;
+    try{r=await pyRun(src,feed)}catch(e){waitMsg(opts.loading,false);busy=false;el.innerHTML='<span class="err">Python could not load. Check the internet connection and press Run again.</span>';return}
+    waitMsg(opts.loading,false);busy=false;
+    el.innerHTML=r.ev.map(([t,k])=>`<span class="${k==='in'?'in':''}">${esc(t)}</span>`).join('');
+    if(r.status==='need'){
+      const inp=document.createElement('input');inp.setAttribute('aria-label','Type your answer and press Enter');el.appendChild(inp);inp.focus();
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter'){feed.push(inp.value);step()}});
+    }else if(r.status==='error'){
+      el.insertAdjacentHTML('beforeend',`<span class="err">\n${r.line?'Error on line '+r.line+'\n':''}${esc(r.err)}</span>`);
+    }else el.insertAdjacentHTML('beforeend','<span class="okn">\nProgram finished.</span>');
+    el.scrollTop=el.scrollHeight;
+    if(r.status!=='need'&&api.onDone)api.onDone(r,el.textContent);
+  }
+  return api;
+}
+
+/* ---------- PART 1: GIS Helper trace ---------- */
+const HELPER=`name = input("What is your name? ")
+print(f"Hi {name}, welcome to GIS!")
+topic = input("Lunch, library or sport? ")
+if topic == "lunch":
+    print("Lunch is in the canteen.")
+elif topic == "library":
+    print("Borrow books at break time.")
+elif topic == "sport":
+    print("Bring your PE kit.")
+else:
+    print("Sorry, ask a teacher.")
+print(f"Bye {name}, have a good day!")`;
+const HELPER_PS=`INPUT name
+OUTPUT "Hi", name, "welcome to GIS!"
+INPUT topic
+IF topic = "lunch" THEN
+    OUTPUT lunch message
+ELSE IF topic = "library" THEN
+    OUTPUT library message
+ELSE IF topic = "sport" THEN
+    OUTPUT sport message
+ELSE
+    OUTPUT "Sorry, ask a teacher"
+END IF
+OUTPUT "Bye", name`;
+const PSMAP={1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:13};
+renderCode($('#py1'),HELPER,hlPy);renderCode($('#ps1'),HELPER_PS,hlPs);
+
+// flowchart
+(function(){
+  const W=330,cx=95,rx=250;let y=14,s='';
+  const node=(id,shape,x,yy,w,h,label)=>{
+    let g;
+    if(shape==='oval')g=`<rect x="${x-w/2}" y="${yy}" width="${w}" height="${h}" rx="${h/2}"/>`;
+    else if(shape==='io')g=`<polygon points="${x-w/2+10},${yy} ${x+w/2+10},${yy} ${x+w/2-10},${yy+h} ${x-w/2-10},${yy+h}"/>`;
+    else if(shape==='dia')g=`<polygon points="${x},${yy} ${x+w/2},${yy+h/2} ${x},${yy+h} ${x-w/2},${yy+h/2}"/>`;
+    else g=`<rect x="${x-w/2}" y="${yy}" width="${w}" height="${h}" rx="6"/>`;
+    s+=`<g class="fn" data-id="${id}">${g}<text x="${x}" y="${yy+h/2}">${label}</text></g>`;
+  };
+  const arrow=(x1,y1,x2,y2)=>{s+=`<path class="fl" d="M${x1} ${y1} L${x2} ${y2}" marker-end="url(#ah)"/>`};
+  node('start','oval',cx,y,80,26,'Start');arrow(cx,y+26,cx,y+40);y+=42;
+  node('l1','io',cx,y,120,28,'INPUT name');arrow(cx,y+28,cx,y+42);y+=44;
+  node('l2','io',cx,y,120,28,'OUTPUT Hi name');arrow(cx,y+28,cx,y+42);y+=44;
+  node('l3','io',cx,y,120,28,'INPUT topic');arrow(cx,y+28,cx,y+40);y+=42;
+  const outs=[];
+  [['l4','l5','lunch?','OUTPUT lunch'],['l6','l7','library?','OUTPUT library'],['l8','l9','sport?','OUTPUT sport']].forEach(([d,o,q,m])=>{
+    node(d,'dia',cx,y,120,50,q);
+    arrow(cx+60,y+25,rx-50,y+25);s+=`<text class="flab" x="${cx+66}" y="${y+18}">Yes</text>`;
+    node(o,'io',rx,y+11,96,28,m);outs.push(y+39);
+    arrow(cx,y+50,cx,y+66);s+=`<text class="flab" x="${cx+6}" y="${y+62}">No</text>`;y+=68;
+  });
+  node('l11','box',cx,y,130,30,'OUTPUT Sorry');const sy=y+30;y+=56;
+  // merge lines
+  s+=`<path class="fl" d="M${cx} ${sy} L${cx} ${y-4}" marker-end="url(#ah)"/>`;
+  const my=y-14;
+  outs.forEach(oy=>{s+=`<path class="fl" d="M${rx} ${oy} L${rx} ${my}"/>`});
+  s+=`<path class="fl" d="M${rx} ${my} L${cx+4} ${my}"/>`;
+  node('l12','io',cx,y,130,28,'OUTPUT Bye name');arrow(cx,y+28,cx,y+42);y+=44;
+  node('end','oval',cx,y,80,26,'End');y+=34;
+  $('#fc1').innerHTML=`<svg viewBox="0 0 ${W} ${y}" role="img" aria-label="Flowchart of the GIS Helper"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa3ae"/></marker></defs>${s}</svg>`;
+})();
+
+const TOPICS=[['lunch','lunch'],['library','library'],['sport','sport'],['pizza','something else']];
+let topic='lunch';
+$('#tp1').innerHTML=TOPICS.map(([v,l])=>`<button class="tb" data-t="${v}" aria-pressed="${v===topic}">${l}</button>`).join('');
+$('#tp1').onclick=e=>{const b=e.target.closest('.tb');if(!b)return;topic=b.dataset.t;$$('#tp1 .tb').forEach(x=>x.setAttribute('aria-pressed',x===b));reset1()};
+const MSG={lunch:[5,'Lunch is in the canteen.'],library:[7,'Borrow books at break time.'],sport:[9,'Bring your PE kit.']};
+let trace=[],ti=0;const followed=new Set(store.get('followed',[]));
+function build(){
+  const nm=$('#nm1').value.trim()||'Mali';
+  const t=[{py:1,fc:'l1',out:['What is your name? ',''],inp:nm},{py:2,fc:'l2',out:[`Hi ${nm}, welcome to GIS!\n`]},{py:3,fc:'l3',out:["Lunch, library or sport? ",""],inp:topic}];
+  const chain=[['lunch',4,'l4'],['library',6,'l6'],['sport',8,'l8']];
+  let hit=false;
+  for(const [v,ln,fc] of chain){t.push({py:ln,fc});if(topic===v){t.push({py:ln+1,fc:'l'+(ln+1),out:[MSG[v][1]+'\n']});hit=true;break}}
+  if(!hit){t.push({py:10,fc:'l11'});t.push({py:11,fc:'l11',out:["Sorry, ask a teacher.\n"]})}
+  t.push({py:12,fc:'l12',out:[`Bye ${nm}, have a good day!\n`]});
+  t.push({py:0,fc:'end',end:1});
+  return t;
+}
+function reset1(){trace=build();ti=0;$('#c1').innerHTML='<span class="note">Press Step to start.</span>';mark($('#py1'),0);mark($('#ps1'),0);$$('#fc1 .fn').forEach(g=>g.classList.toggle('hl',g.dataset.id==='start'));$('#st1').disabled=false}
+function step1(){
+  if(ti===0)$('#c1').innerHTML='';
+  const s=trace[ti];if(!s)return;
+  mark($('#py1'),s.py);mark($('#ps1'),PSMAP[s.py]||0);
+  $$('#fc1 .fn').forEach(g=>g.classList.toggle('hl',g.dataset.id===s.fc));
+  const c=$('#c1');
+  if(s.out){c.insertAdjacentHTML('beforeend',esc(s.out[0]));if(s.inp!==undefined)c.insertAdjacentHTML('beforeend',`<span class="in">${esc(s.inp)}</span>\n`)}
+  if(s.end){c.insertAdjacentHTML('beforeend','<span class="okn">Program finished.</span>');$('#st1').disabled=true;followed.add(topic);store.set('followed',[...followed]);count1()}
+  c.scrollTop=c.scrollHeight;ti++;
+}
+function count1(){$('#f1').textContent=`Topics followed to the end: ${Math.min(followed.size,4)} of 2 needed`+(followed.size>=2?'. Part 1 done!':'');if(followed.size>=2)finish(1)}
+$('#st1').onclick=step1;$('#rs1').onclick=reset1;$('#nm1').oninput=reset1;
+$('#ra1').onclick=()=>{if(ti>=trace.length)reset1();while(ti<trace.length)step1()};
+reset1();count1();
+
+/* ---------- PART 2: three programs ---------- */
+const PROGS=[
+ {name:'Quiz',code:`score = 0
+answer = input("What is the capital of Laos? ")
+if answer == "Vientiane":
+    score = score + 1
+    print("Correct!")
+else:
+    print("Not quite. It is Vientiane.")
+answer = input("How many days are in a week? ")
+if answer == "7":
+    score = score + 1
+    print("Correct!")
+else:
+    print("Not quite. It is 7.")
+print(f"You scored {score} out of 2.")`,
+  replies:[['You scored 0 out of 2.','0 out of 2'],['You scored 1 out of 2.','1 out of 2'],['You scored 2 out of 2.','2 out of 2']]},
+ {name:'Lao phrases',code:`print("English to Lao phrase helper")
+phrase = input("Type hello, thank you or goodbye: ")
+if phrase == "hello":
+    print("ສະບາຍດີ (sabaidee)")
+elif phrase == "thank you":
+    print("ຂອບໃຈ (khop jai)")
+elif phrase == "goodbye":
+    print("ລາກ່ອນ (la kon)")
+else:
+    print("I don't know that phrase yet.")`,
+  replies:[['sabaidee','hello'],['khop jai','thank you'],['la kon','goodbye'],["I don't know that phrase yet.",'unknown phrase']]},
+ {name:'Library',code:`books = int(input("How many books do you have out? "))
+if books >= 3:
+    print("That is the limit. Return a book first.")
+elif books == 0:
+    print("You have no books out. You can borrow 3.")
+else:
+    print(f"You can borrow {3 - books} more.")`,
+  replies:[['That is the limit','at the limit'],['You have no books out','no books'],[' more.','some left']]}
+];
+const got2=store.get('got2',[[],[],[]]);let pi=0;
+const con2=Console($('#c2'),{loading:$('#ld2')});
+function tabs2(){
+  $('#tabs2').innerHTML=PROGS.map((p,i)=>{const n=got2[i].length,t=p.replies.length;return `<button class="tab${i===pi?' on':''}${n===t?' full':''}" data-i="${i}">${p.name}<span class="cnt">${n}/${t}</span></button>`}).join('');
+}
+function reps2(){const i=pi,p=PROGS[i];tabs2();
+  $('#rep2').innerHTML=`<p class="ptitle" style="margin:6px 0 0">Replies found</p>`+p.replies.map((r,j)=>{const g=got2[i].includes(j);return `<div class="reply${g?' got':''}"><b>${g?'✓':j+1}</b>${g?esc(r[1]):'Not found yet'}</div>`}).join('')}
+function show2(i){pi=i;const p=PROGS[i];renderCode($('#py2'),p.code,hlPy);$('#ttl2').textContent=p.name;reps2();
+  $('#c2').innerHTML='<span class="note">Press Run to start the program.</span>'}
+$('#tabs2').onclick=e=>{const b=e.target.closest('.tab');if(b)show2(+b.dataset.i)};
+$('#run2').onclick=()=>con2.start(PROGS[pi].code);
+con2.onDone=(r,text)=>{
+  if(r.status!=='done')return;
+  const p=PROGS[pi];let lines=text.split('\n');
+  p.replies.forEach((rp,j)=>{if(!got2[pi].includes(j)&&lines.some(l=>l.includes(rp[0])&&!l.includes('?')))got2[pi].push(j)});
+  store.set('got2',got2);reps2();
+  const all=PROGS.every((p,i)=>got2[i].length===p.replies.length);if(all)finish(2);
+};
+show2(0);
+
+/* ---------- PART 3: fill in ---------- */
+$('#ps3').innerHTML=`INPUT name
+INPUT day
+IF day = "Monday" THEN
+    OUTPUT "Chess club after school."
+ELSE IF day = "Wednesday" THEN
+    OUTPUT "Football on the field."
+ELSE
+    OUTPUT "No club today."
+END IF
+OUTPUT "See you there", name`.split('\n').map(l=>`<span class="ln">${hlPs(l)}</span>`).join('');
+const BL=[['input','print','int','INPUT'],['if','IF','elif','else'],['==','=','>=','!='],['elif','else if','if','else'],['else','elif','then','END'],['f','s','%','$'],['name','day','"name"','Name']];
+const ANS3=['input','if','==','elif','else','f','name'];
+const FILL=`name = {0}("What is your name? ")
+day = input("Which day is it? ")
+{1} day {2} "Monday":
+    print("Chess club after school.")
+{3} day == "Wednesday":
+    print("Football on the field.")
+{4}:
+    print("No club today.")
+print({5}"See you there, {{6}}!")`;
+function mixed(a){return a.map((v,i)=>[v,Math.sin(i*9.7+a.length)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0])}
+$('#fill3').innerHTML=FILL.split('\n').map(line=>{
+  return line.replace(/\{\{(\d)\}\}|\{(\d)\}|([^{}]+)/g,(m,a,b,txt)=>{
+    if(txt!==undefined)return hlPy(txt);
+    const k=+(a??b);const sel=`<select data-b="${k}" aria-label="Blank ${k+1}"><option value="">?</option>${mixed(BL[k]).map(o=>`<option>${esc(o)}</option>`).join('')}</select>`;
+    return a!==undefined?`<span class="s">{</span>${sel}<span class="s">}</span>`:sel;
+  });
+}).join('\n');
+$('#fill3').addEventListener('change',e=>{e.target.classList.remove('ok','no');$('#run3').disabled=true;$('#msg3').textContent=''});
+$('#chk3').onclick=()=>{
+  let right=0;$$('#fill3 select').forEach(s=>{const ok=s.value===ANS3[+s.dataset.b];s.classList.toggle('ok',ok);s.classList.toggle('no',!ok);if(ok)right++});
+  const m=$('#msg3');
+  if(right===7){m.className='msg ok';m.textContent='All 7 correct. Press Run it to try the program.';$('#run3').disabled=false;finish(3)}
+  else{m.className='msg no';m.textContent=`${right} of 7 correct. Change the red boxes and check again.`}
+};
+const con3=Console($('#c3'));
+function code3(){const v=$$('#fill3 select').map(s=>s.value);return FILL.replace(/\{\{(\d)\}\}/g,(m,a)=>'{'+v[a]+'}').replace(/\{(\d)\}/g,(m,a)=>v[a])}
+$('#run3').onclick=()=>{$('#c3').style.display='block';con3.start(code3())};
+$('#ans3').onclick=()=>{$$('#fill3 select').forEach(s=>s.value=ANS3[+s.dataset.b]);$('#chk3').click()};
+
+/* ---------- PART 4: order ---------- */
+$('#ps4').innerHTML=HELPER_PS.split('\n').map(l=>`<span class="ln">${hlPs(l)}</span>`).join('');
+const LINES=HELPER.split('\n');
+let order=store.get('order4',null);
+function shuffle(){const a=LINES.map((_,i)=>i);for(let k=0;k<40;k++){const i=Math.floor(Math.random()*a.length),j=Math.floor(Math.random()*a.length);[a[i],a[j]]=[a[j],a[i]]}if(a.every((v,i)=>v===i))return shuffle();return a}
+if(!order||order.length!==LINES.length)order=shuffle();
+function paint4(){
+  $('#pl4').innerHTML=order.map((li,pos)=>`<li class="pl" draggable="true" data-pos="${pos}"><span class="txt">${hlPy(LINES[li])}</span><button class="mv" data-mv="-1" aria-label="Move up">▲</button><button class="mv" data-mv="1" aria-label="Move down">▼</button></li>`).join('');
+  store.set('order4',order);
+}
+function moved(){$('#run4').disabled=true;$('#msg4').textContent=''}
+$('#pl4').addEventListener('click',e=>{const b=e.target.closest('.mv');if(!b)return;const p=+b.closest('.pl').dataset.pos,q=p+(+b.dataset.mv);if(q<0||q>=order.length)return;[order[p],order[q]]=[order[q],order[p]];paint4();moved();$(`#pl4 .pl[data-pos="${q}"] .mv[data-mv="${b.dataset.mv}"]`)?.focus()});
+let dragFrom=null;
+$('#pl4').addEventListener('dragstart',e=>{const li=e.target.closest('.pl');dragFrom=+li.dataset.pos;li.classList.add('drag');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','x')});
+$('#pl4').addEventListener('dragover',e=>{e.preventDefault()});
+$('#pl4').addEventListener('drop',e=>{e.preventDefault();const li=e.target.closest('.pl');if(!li||dragFrom===null)return;const to=+li.dataset.pos;const [x]=order.splice(dragFrom,1);order.splice(to,0,x);dragFrom=null;paint4();moved()});
+$('#pl4').addEventListener('dragend',()=>{dragFrom=null;$$('#pl4 .pl').forEach(l=>l.classList.remove('drag'))});
+$('#chk4').onclick=()=>{
+  let wrong=0;$$('#pl4 .pl').forEach((li,pos)=>{const ok=LINES[order[pos]]===LINES[pos];li.classList.toggle('ok',ok);li.classList.toggle('no',!ok);if(!ok)wrong++});
+  const m=$('#msg4');
+  if(!wrong){m.className='msg ok';m.textContent='Every line is in the right place. Press Run it.';$('#run4').disabled=false;finish(4)}
+  else{m.className='msg no';m.textContent=`${wrong} line${wrong>1?'s are':' is'} in the wrong place. Check them against the pseudocode.`}
+};
+$('#mix4').onclick=()=>{order=shuffle();paint4();moved()};
+$('#ans4').onclick=()=>{order=LINES.map((_,i)=>i);paint4();$('#chk4').click()};
+const con4=Console($('#c4'));
+$('#run4').onclick=()=>{$('#c4').style.display='block';con4.start(order.map(i=>LINES[i]).join('\n'))};
+paint4();
+
+/* ---------- PART 5: debug ---------- */
+const BUGS=[
+ {code:`mood = input("How are you? ")
+if mood == "happy"
+    print("Great to hear!")
+else:
+    print("I hope your day gets better.")`,
+  fix:`mood = input("How are you? ")
+if mood == "happy":
+    print("Great to hear!")
+else:
+    print("I hope your day gets better.")`,
+  tests:[[['happy'],'Great to hear!'],[['tired'],'I hope your day gets better.']],
+  hint:'Look at the end of line 2. Every if and else line ends with something.'},
+ {code:`answer = input("What is 5 + 5? ")
+if answer = "10":
+    print("Correct!")
+else:
+    print("Try again.")`,
+  fix:`answer = input("What is 5 + 5? ")
+if answer == "10":
+    print("Correct!")
+else:
+    print("Try again.")`,
+  tests:[[['10'],'Correct!'],[['9'],'Try again.']],
+  hint:'One = stores a value. To compare two values, you need ==.'},
+ {code:`age = int(input("How old are you? "))
+if age >= 12:
+print("You can join the Python club.")
+else:
+    print("Wait until you are 12.")`,
+  fix:`age = int(input("How old are you? "))
+if age >= 12:
+    print("You can join the Python club.")
+else:
+    print("Wait until you are 12.")`,
+  tests:[[['12'],'You can join the Python club.'],[['10'],'Wait until you are 12.']],
+  hint:'Lines inside an if must start with 4 spaces.'},
+ {code:`name = input("What is your name? ")
+house = input("Which house are you in? ")
+print(f"Welcome, {nmae} from {house} House!")`,
+  fix:`name = input("What is your name? ")
+house = input("Which house are you in? ")
+print(f"Welcome, {name} from {house} House!")`,
+  tests:[[['Mali','Red'],'Welcome, Mali from Red House!']],
+  hint:'Check the spelling of every variable on line 3.'},
+ {code:`score = input("What did you score out of 10? ")
+if score >= 5:
+    print("You passed!")
+else:
+    print("Keep practising.")`,
+  fix:`score = int(input("What did you score out of 10? "))
+if score >= 5:
+    print("You passed!")
+else:
+    print("Keep practising.")`,
+  tests:[[['7'],'You passed!'],[['3'],'Keep practising.']],
+  hint:'input() always gives text. Put int( ) around it to get a number.'}
+];
+const st5=store.get('st5',BUGS.map(()=>({fixed:0,hints:0,code:null})));
+let bi=0;
+function points(){return st5.reduce((t,s)=>t+(s.fixed?Math.max(20-5*s.hints,5):0),0)}
+function paintPts(){const p=points();$('#pts').innerHTML=`${p}<small> pts</small>`;$('#ringc').style.strokeDashoffset=314.16*(1-p/100);if(st5.every(s=>s.fixed))finish(5)}
+function bugsBar(){$('#bugs').innerHTML=BUGS.map((_,i)=>`<button class="bt${i===bi?' on':''}${st5[i].fixed?' done':''}" data-i="${i}" aria-label="Bug ${i+1}${st5[i].fixed?', fixed':''}">${i+1}</button>`).join('')}
+function gutter(err){const n=$('#ed5').value.split('\n').length;$('#gut5').innerHTML=Array.from({length:n},(_,i)=>`<span class="${err===i+1?'errl':''}">${i+1}</span>`).join('')}
+function show5(i){bi=i;bugsBar();const s=st5[i];$('#bt5').textContent=`Bug ${i+1}`+(s.fixed?' (fixed)':'');$('#ed5').value=s.code??BUGS[i].code;gutter();
+  $('#c5').innerHTML='<span class="note">Press Run to see what happens.</span>';$('#msg5').textContent='';
+  const h=$('#h5');h.textContent=BUGS[i].hint;h.classList.toggle('on',s.hints>0);$('#hint5').disabled=s.hints>0||!!s.fixed}
+$('#bugs').onclick=e=>{const b=e.target.closest('.bt');if(b)show5(+b.dataset.i)};
+$('#ed5').addEventListener('input',()=>{st5[bi].code=$('#ed5').value;store.set('st5',st5);gutter()});
+$('#ed5').addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();const t=e.target,a=t.selectionStart;t.setRangeText('    ',a,t.selectionEnd,'end');t.dispatchEvent(new Event('input'))}});
+$('#ed5').addEventListener('scroll',()=>{$('#gut5').scrollTop=$('#ed5').scrollTop});
+$('#hint5').onclick=()=>{st5[bi].hints=1;store.set('st5',st5);$('#h5').classList.add('on');$('#hint5').disabled=true};
+$('#reset5').onclick=()=>{st5[bi].code=null;store.set('st5',st5);show5(bi)};
+$('#ans5').onclick=()=>{$('#ed5').value=BUGS[bi].fix;$('#ed5').dispatchEvent(new Event('input'))};
+$('#run5').onclick=async()=>{
+  const src=$('#ed5').value,b=BUGS[bi],c=$('#c5'),m=$('#msg5');m.textContent='';
+  waitMsg($('#ld5'),true);
+  let results=[];
+  try{for(const [feed,want] of b.tests)results.push([await pyRun(src,feed),want,feed])}
+  catch(e){waitMsg($('#ld5'),false);c.innerHTML='<span class="err">Python could not load. Check the internet connection and press Run again.</span>';return}
+  waitMsg($('#ld5'),false);
+  const bad=results.find(([r,want])=>r.status!=='done'||!r.ev.map(x=>x[0]).join('').includes(want));
+  const [r]=bad||results[0];
+  c.innerHTML=`<span class="note">Test run, typing: ${esc((bad||results[0])[2].join(', '))}\n\n</span>`+r.ev.map(([t,k])=>`<span class="${k==='in'?'in':''}">${esc(t)}</span>`).join('');
+  if(r.status==='error'){c.insertAdjacentHTML('beforeend',`<span class="err">\n${r.line?'Error on line '+r.line+'\n':''}${esc(r.err)}</span>`);gutter(r.line);m.className='msg no';m.textContent=r.line?`Look at line ${r.line}. Read the last line of the error.`:'Read the error message.'}
+  else if(bad){gutter();m.className='msg no';m.textContent='No error now, but the reply is not right yet. Check your fix.'}
+  else{gutter();c.insertAdjacentHTML('beforeend','<span class="okn">\nProgram finished. All tests passed.</span>');
+    if(!st5[bi].fixed){st5[bi].fixed=1;store.set('st5',st5);const got=Math.max(20-5*st5[bi].hints,5);m.className='msg ok';m.textContent=`Fixed! +${got} points.`;paintPts();bugsBar();$('#bt5').textContent=`Bug ${bi+1} (fixed)`;$('#hint5').disabled=true}
+    else{m.className='msg ok';m.textContent='Still working. You already have the points for this one.'}}
+};
+show5(0);paintPts();
+
+/* ---------- start ---------- */
+paintProgress();
+go(store.get('part',0),false);
+setTimeout(loadPy,2500);
+})();
+</script>
+</body>
+</html>
