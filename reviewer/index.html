@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y7 Term 1 Reviewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e3e9ef; --card:#f6f8fa; --white:#fdfdfe;
+  --ink:#30353d; --soft:#68707c; --faint:#9aa2ad;
+  --blue:#2b7fe6; --indigo:#3a2df0; --grad:linear-gradient(100deg,#2b8de6 0%,#3a2df0 100%);
+  --ok:#14936a; --okbg:#e2f4ec; --warn:#b4541a; --warnbg:#fdeee3; --real:#6a3fc0; --realbg:#efe9fb;
+  --rise:14px 14px 32px rgba(160,174,194,.5),-10px -10px 26px rgba(255,255,255,.95);
+  --rise-s:6px 6px 14px rgba(160,174,194,.45),-5px -5px 12px rgba(255,255,255,.95);
+  --sink:inset 3px 3px 8px rgba(160,174,194,.4),inset -3px -3px 8px rgba(255,255,255,.9);
+  --mono:Consolas,"Cascadia Mono","Courier New",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16.5px/1.6 Montserrat,system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:900px;margin:0 auto;padding:0 18px}
+
+header.top{position:sticky;top:0;z-index:10;background:rgba(227,233,239,.94);backdrop-filter:blur(8px)}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0}
+.bar b{font-size:15px;white-space:nowrap}
+.prog{flex:1;height:10px;border-radius:10px;background:#d5dce4;box-shadow:var(--sink);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--grad);transition:width .4s}
+.pct{font-size:14px;font-weight:600;color:var(--soft);min-width:84px;text-align:right}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:thin}
+.chips a{flex:none;text-decoration:none;color:var(--soft);font-size:13.5px;font-weight:600;border:1.5px solid #9aa2ad;border-radius:14px;padding:6px 12px;white-space:nowrap}
+.chips a.got{background:var(--grad);border-color:transparent;color:#fff}
+
+.hero{padding:26px 0 8px}
+h1{font-size:38px;font-weight:600;line-height:1.15;margin:0 0 8px;letter-spacing:-.01em}
+.lead{margin:0 0 18px;max-width:62ch;color:var(--soft)}
+.how{background:var(--white);border-radius:26px;box-shadow:var(--rise-s);padding:18px 22px;margin:0 0 26px}
+.how h2{font-size:18px;margin:0 0 6px}
+.how ol{margin:0;padding-left:22px}
+.how li{margin:3px 0}
+
+section.topic{background:var(--card);border-radius:32px;box-shadow:var(--rise);padding:26px 28px;margin:0 0 30px}
+.th{display:flex;gap:16px;align-items:flex-start;margin-bottom:14px}
+.num{flex:none;width:46px;height:46px;border-radius:16px;background:var(--grad);color:#fff;display:grid;place-items:center;font-weight:700;font-size:18px}
+.th h2{font-size:25px;font-weight:600;margin:0;line-height:1.2}
+.th .wk{font-size:13.5px;color:var(--soft);font-weight:600;margin-top:2px}
+.big{font-size:18px;font-weight:600;margin:0 0 14px;padding:14px 18px;border-radius:20px;background:var(--white);box-shadow:var(--sink)}
+
+.box{border-radius:20px;padding:14px 18px;margin:12px 0}
+.box h3{margin:0 0 6px;font-size:15px;font-weight:700}
+.box ul{margin:0;padding-left:20px}.box li{margin:4px 0}
+.rem{background:var(--white);box-shadow:var(--rise-s)}
+.rem h3{color:var(--indigo)}
+.real{background:var(--realbg)}.real h3{color:var(--real)}
+.watch{background:var(--warnbg)}.watch h3{color:var(--warn)}
+.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}
+.term{background:var(--white);border-radius:16px;padding:10px 14px;box-shadow:var(--rise-s);font-size:15px}
+.term b{display:block;color:var(--indigo);font-size:15.5px}
+
+pre{font:15px/1.65 var(--mono);background:#232733;color:#e8ebf2;border-radius:18px;padding:14px 18px;margin:12px 0;overflow-x:auto;white-space:pre}
+pre .c{color:#8a93a6}pre .s{color:#9fe0b8}pre .k{color:#b9a8ff;font-weight:700}pre .o{color:#7fd3ff}
+code{font:600 .95em var(--mono);background:#e8edf6;color:#2a2fa8;border-radius:6px;padding:1px 5px}
+pre code{background:none;color:inherit;padding:0;font:inherit}
+
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--white);border-radius:18px;overflow:hidden;box-shadow:var(--rise-s);margin:12px 0;font-size:15px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #e3e8ee;vertical-align:top}
+th{background:#eef2f8;font-weight:700;font-size:14px}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+
+.check h3{font-size:15px;margin:16px 0 8px;color:var(--ink)}
+details{background:var(--white);border-radius:16px;box-shadow:var(--rise-s);margin:8px 0;padding:0}
+summary{cursor:pointer;padding:12px 16px;font-weight:600;list-style:none;display:flex;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"?";flex:none;width:24px;height:24px;border-radius:50%;background:#dfe6f2;color:var(--indigo);display:grid;place-items:center;font-size:13px}
+details[open] summary::before{content:"✓";background:var(--ok);color:#fff}
+details .ans{padding:0 16px 14px 50px;color:var(--ok);font-weight:600}
+details .ans pre{color:#e8ebf2;font-weight:400}
+
+.got-it{margin-top:16px;border:0;border-radius:999px;padding:11px 24px;font-weight:600;background:var(--white);box-shadow:var(--rise-s)}
+.got-it[aria-pressed="true"]{background:var(--grad);color:#fff}
+
+/* flashcards */
+.fc{display:grid;place-items:center;min-height:190px;border-radius:26px;background:var(--white);box-shadow:var(--rise);padding:24px;text-align:center;cursor:pointer;user-select:none;margin:14px 0}
+.fc .q{font-size:26px;font-weight:700;color:var(--indigo)}
+.fc .a{font-size:18px;font-weight:500;max-width:46ch}
+.fc .tip{font-size:13px;color:var(--faint);margin-top:10px}
+.fcrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pill{border:0;border-radius:999px;padding:11px 22px;font-weight:600;background:var(--white);box-shadow:var(--rise-s)}
+.pill.go{background:var(--grad);color:#fff}
+.fcn{text-align:center;color:var(--soft);font-size:14px;font-weight:600}
+
+footer{padding:10px 0 50px;color:var(--soft);font-size:14px;text-align:center}
+
+@media (max-width:640px){
+  body{font-size:15.5px}
+  h1{font-size:29px}
+  section.topic{padding:20px 16px;border-radius:26px}
+  .th h2{font-size:21px}
+  .terms{grid-template-columns:1fr}
+  pre{font-size:13.5px;padding:12px 14px}
+  table{font-size:13.5px}th,td{padding:7px 8px}
+  .bar b{display:none}
+}
+@media print{
+  header.top,.got-it,#cards,.how{display:none}
+  body{background:#fff}
+  section.topic{box-shadow:none;border:1px solid #ccd;break-inside:avoid-page}
+  details{box-shadow:none;border:1px solid #dde}
+  details .ans{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="bar"><b>Y7 Term 1 Reviewer</b><div class="prog" aria-hidden="true"><i id="pbar"></i></div><span class="pct" id="pct">0 of 10 done</span></div>
+  <nav class="chips" id="chips" aria-label="Topics"></nav>
+</div></header>
+
+<main class="wrap">
+<div class="hero">
+  <h1>Year 7 Digital Technologies: everything from Term 1</h1>
+  <p class="lead">Ten topics, in the order we learned them. Each one has the main idea, key words, a real-world example, the common mistake and quick questions to test yourself.</p>
+  <div class="how">
+    <h2>How to use this</h2>
+    <ol>
+      <li>Read the big idea in the box at the top of a topic. Say it in your own words.</li>
+      <li>Cover the answers and try the "Check yourself" questions. Tap a question to see the answer.</li>
+      <li>Press <b>I've got this</b> when you can answer them all. Your progress bar fills up.</li>
+      <li>Finish with the flashcards at the bottom. Go through them until you know every one.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 1 -->
+<section class="topic" id="t1" data-t="Thinking skills">
+ <div class="th"><div class="num">1</div><div><h2>Thinking like a computer scientist</h2><div class="wk">Week 2</div></div></div>
+ <p class="big">Before you code, you think. Break a big problem into small parts, look for patterns, keep only what matters, then write the steps.</p>
+ <div class="terms">
+  <div class="term"><b>Decomposition</b>Breaking a big problem into smaller parts.</div>
+  <div class="term"><b>Pattern recognition</b>Spotting what is the same or repeats.</div>
+  <div class="term"><b>Abstraction</b>Keeping the important details and hiding the rest.</div>
+  <div class="term"><b>Algorithm</b>Step-by-step instructions to solve a problem.</div>
+ </div>
+ <div class="box real"><h3>Real world</h3><ul>
+  <li><b>Decomposition:</b> a food delivery app splits one job into small jobs: choose a restaurant, order, pay, cook, deliver.</li>
+  <li><b>Pattern recognition:</b> a mini mart notices the queue is always longest at lunch time, so it opens a second till.</li>
+  <li><b>Abstraction:</b> a map app shows roads and places, not every tree and house.</li>
+  <li><b>Algorithm:</b> a recipe for sticky rice: soak, drain, steam, serve.</li>
+ </ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li>Requirements come from the <b>users</b>, so you ask them (a survey). Don't guess what people want.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Planning a class party: "food, music, games, invitations". Which skill is this?</summary><div class="ans">Decomposition: one big job broken into smaller parts.</div></details>
+  <details><summary>A school bus map shows only the stops. Which skill is that?</summary><div class="ans">Abstraction: it keeps what you need and hides the rest.</div></details>
+ </div>
+ <button class="got-it" data-t="1" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 2 -->
+<section class="topic" id="t2" data-t="Flowcharts">
+ <div class="th"><div class="num">2</div><div><h2>Flowcharts and pseudocode</h2><div class="wk">Week 3</div></div></div>
+ <p class="big">The same algorithm can be drawn as a flowchart or written as pseudocode. Both are plans you make before you code.</p>
+ <table>
+  <tr><th>Shape</th><th>Means</th><th>Example</th></tr>
+  <tr><td>Oval</td><td>Start or End</td><td>Start</td></tr>
+  <tr><td>Parallelogram</td><td>Input or Output</td><td>INPUT name</td></tr>
+  <tr><td>Rectangle</td><td>Process (do something)</td><td>total = a + b</td></tr>
+  <tr><td>Diamond</td><td>Decision (Yes or No)</td><td>Is age ≥ 12?</td></tr>
+  <tr><td>Arrow</td><td>Which way to go next</td><td>→</td></tr>
+ </table>
+ <div class="terms">
+  <div class="term"><b>Pseudocode</b>Plan written in simple English-like steps: INPUT, OUTPUT, IF, THEN, ELSE, END IF.</div>
+  <div class="term"><b>Control structures</b>Sequence (in order), selection (choose), iteration (repeat).</div>
+  <div class="term"><b>Trace</b>Follow the steps one at a time to predict what happens.</div>
+  <div class="term"><b>Trace table</b>A table showing each variable's value after each step.</div>
+ </div>
+ <pre><span class="k">INPUT</span> age
+<span class="k">IF</span> age >= 12 <span class="k">THEN</span>
+    <span class="k">OUTPUT</span> "You can join"
+<span class="k">ELSE</span>
+    <span class="k">OUTPUT</span> "Not yet"
+<span class="k">END IF</span></pre>
+ <div class="box real"><h3>Real world</h3><ul><li>An ATM is a flowchart in real life: input your card and PIN, then a diamond asks "PIN correct?". Yes leads to your money, No leads to "Try again".</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li>A diamond always has two ways out: <b>Yes</b> and <b>No</b>. Label both.</li><li>Input and output use the parallelogram, not the rectangle.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Which flowchart shape asks a question?</summary><div class="ans">The diamond (a decision).</div></details>
+  <details><summary>Trace the pseudocode above with age = 10. What is the output?</summary><div class="ans">"Not yet"</div></details>
+  <details><summary>Name the three control structures.</summary><div class="ans">Sequence, selection and iteration.</div></details>
+ </div>
+ <button class="got-it" data-t="2" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 3 -->
+<section class="topic" id="t3" data-t="Thonny & print">
+ <div class="th"><div class="num">3</div><div><h2>Hello, Thonny: print, strings and comments</h2><div class="wk">Week 4</div></div></div>
+ <p class="big">Python runs your lines from top to bottom, in order. <code>print()</code> shows something on the screen.</p>
+ <div class="terms">
+  <div class="term"><b>Editor</b>The top part of Thonny, where you write and save your program.</div>
+  <div class="term"><b>Shell</b>The bottom part, where Python shows the output and errors.</div>
+  <div class="term"><b>String</b>Text inside quotes: <code>"Sabaidee"</code></div>
+  <div class="term"><b>Comment</b>A note starting with <code>#</code>. Python skips it.</div>
+ </div>
+ <pre><span class="c"># My first program</span>
+<span class="o">print</span>(<span class="s">"Hello, Year 7!"</span>)
+<span class="o">print</span>(<span class="s">"Sabaidee from my computer"</span>)
+<span class="o">print</span>(<span class="s">"2 + 3"</span>)    <span class="c"># shows 2 + 3</span>
+<span class="o">print</span>(2 + 3)      <span class="c"># shows 5</span></pre>
+ <div class="box rem"><h3>Remember</h3><ul>
+  <li>Quotes make it text, so <code>print("2 + 3")</code> shows <b>2 + 3</b> and doesn't do the maths.</li>
+  <li>Order matters. In ASCII art, the order of your print lines <b>is</b> the picture.</li>
+  <li>Save with the class pattern: <code>Y7_Surname_ProjectName.py</code></li>
+  <li>Errors are information, not failure. Read the red text.</li>
+ </ul></div>
+ <div class="box real"><h3>Real world</h3><ul><li>Comments are like sticky notes on a recipe: "use less chilli". The cook reads them, but they are not part of the food.</li><li>A shop receipt printer works like <code>print()</code>: line by line, top to bottom.</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li><code>Print("Hi")</code> with a capital P fails. Python is <b>case-sensitive</b>.</li><li>Every opening quote and bracket needs a closing one.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Where does the output appear in Thonny?</summary><div class="ans">In the shell (the bottom part).</div></details>
+  <details><summary>What does <code>print("5" + "5")</code> show?</summary><div class="ans">55 (it joins the two strings).</div></details>
+ </div>
+ <button class="got-it" data-t="3" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 4 -->
+<section class="topic" id="t4" data-t="Variables & input">
+ <div class="th"><div class="num">4</div><div><h2>Variables, input() and f-strings</h2><div class="wk">Week 5</div></div></div>
+ <p class="big">A variable is a named box (envelope) that stores a value. <code>input()</code> asks the user and stores what they type.</p>
+ <pre>name = <span class="o">input</span>(<span class="s">"What is your name? "</span>)
+food = <span class="o">input</span>(<span class="s">"Favourite food? "</span>)
+<span class="o">print</span>(<span class="s">f"Hi {name}! I like {food} too."</span>)</pre>
+ <div class="terms">
+  <div class="term"><b>Variable</b>A name that stores a value: <code>name = "Mali"</code></div>
+  <div class="term"><b>=</b>Means "store this in the box". It is not "equals" like in maths.</div>
+  <div class="term"><b>input()</b>Asks a question and waits for the user to type.</div>
+  <div class="term"><b>f-string</b><code>f"...{name}..."</code> puts a variable's value inside text.</div>
+ </div>
+ <div class="box rem"><h3>Good variable names</h3><ul>
+  <li>Say what is inside: <code>jump_distance</code>, not <code>x</code></li>
+  <li>No spaces (use _), can't start with a number, no symbols like ! or ?</li>
+  <li><code>score</code> and <code>Score</code> are two <b>different</b> variables.</li>
+ </ul></div>
+ <div class="box real"><h3>Real world</h3><ul><li>Your phone contacts: the label "Mum" is the variable name, and the phone number is the value.</li><li>"Hi Mali, your order is on the way" is an f-string. The app fills in your name.</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li>Forgetting the <b>f</b> prints the braces: <code>print("Hi {name}")</code> shows <b>Hi {name}</b>.</li><li>A new value replaces the old one in the box.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Which name is NOT allowed: <code>rizz_level</code>, <code>2nd_place</code>, <code>boba_count</code>?</summary><div class="ans"><code>2nd_place</code>, because a name can't start with a number.</div></details>
+  <details><summary><code>x = 5</code> then <code>x = 9</code>. What is in x now?</summary><div class="ans">9. The new value replaces the old one.</div></details>
+ </div>
+ <button class="got-it" data-t="4" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 5 -->
+<section class="topic" id="t5" data-t="Data types">
+ <div class="th"><div class="num">5</div><div><h2>Numbers and data types</h2><div class="wk">Week 6</div></div></div>
+ <p class="big"><code>input()</code> always gives you text (a string). To do maths, change it into a number with <code>int()</code> or <code>float()</code>.</p>
+ <table>
+  <tr><th>Type</th><th>What it is</th><th>Examples</th></tr>
+  <tr><td><code>int</code></td><td>Whole number</td><td>12, 0, -3</td></tr>
+  <tr><td><code>float</code></td><td>Number with a decimal point</td><td>4.5, 1.55</td></tr>
+  <tr><td><code>str</code></td><td>Text, in quotes</td><td>"Soulisok", "67"</td></tr>
+ </table>
+ <pre>a = <span class="o">input</span>(<span class="s">"Number: "</span>)        <span class="c"># user types 10</span>
+b = <span class="o">input</span>(<span class="s">"Number: "</span>)        <span class="c"># user types 5</span>
+<span class="o">print</span>(a + b)                   <span class="c"># 105  (text joined!)</span>
+<span class="o">print</span>(<span class="o">int</span>(a) + <span class="o">int</span>(b))         <span class="c"># 15   (real maths)</span>
+
+total = 12 + 15 + 9
+average = total / 3
+<span class="o">print</span>(<span class="s">f"Total: {total}, average: {average}"</span>)   <span class="c"># 36, 12.0</span></pre>
+ <div class="box rem"><h3>Remember</h3><ul>
+  <li>Maths operators: <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide.</li>
+  <li><code>/</code> always gives a float: <code>36 / 3</code> is <b>12.0</b></li>
+  <li><code>"67"</code> is a string, but <code>67</code> is an int.</li>
+ </ul></div>
+ <div class="box real"><h3>Real world</h3><ul><li>A phone number is stored as text, not a number. It can start with 0 and you never add phone numbers together.</li><li>In 1999 NASA lost the Mars Climate Orbiter because one team used different units from another. The numbers were the wrong kind for the program, and that cost about 125 million US dollars.</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li><code>int(input())</code> crashes with <b>ValueError</b> if the user types "two" instead of 2.</li><li>Comparing text with a number (<code>"7" >= 5</code>) gives <b>TypeError</b>.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>What type is 4.5? And "4.5"?</summary><div class="ans">4.5 is a float. "4.5" is a string, because it's in quotes.</div></details>
+  <details><summary>Fix it so it adds: <code>age = input("Age? ")</code></summary><div class="ans"><code>age = int(input("Age? "))</code></div></details>
+ </div>
+ <button class="got-it" data-t="5" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 6 -->
+<section class="topic" id="t6" data-t="if / elif / else">
+ <div class="th"><div class="num">6</div><div><h2>Selection: if, elif, else</h2><div class="wk">Week 7</div></div></div>
+ <p class="big">Selection lets a program choose. Python checks each condition from the top and runs only the <b>first</b> branch that is True.</p>
+ <pre>temp = <span class="o">int</span>(<span class="o">input</span>(<span class="s">"Temperature? "</span>))
+<span class="k">if</span> temp >= 35:
+    <span class="o">print</span>(<span class="s">"Very hot. Drink water!"</span>)
+<span class="k">elif</span> temp >= 25:
+    <span class="o">print</span>(<span class="s">"Warm day."</span>)
+<span class="k">else</span>:
+    <span class="o">print</span>(<span class="s">"Cool day."</span>)</pre>
+ <table>
+  <tr><th>Operator</th><th>Means</th><th>Operator</th><th>Means</th></tr>
+  <tr><td><code>==</code></td><td>equal to</td><td><code>!=</code></td><td>not equal to</td></tr>
+  <tr><td><code>&gt;</code></td><td>greater than</td><td><code>&lt;</code></td><td>less than</td></tr>
+  <tr><td><code>&gt;=</code></td><td>greater or equal</td><td><code>&lt;=</code></td><td>less or equal</td></tr>
+ </table>
+ <div class="box rem"><h3>Remember</h3><ul>
+  <li><code>if</code> starts it, <code>elif</code> means "else if", and <code>else</code> catches everything left.</li>
+  <li>Every <code>if</code>, <code>elif</code> and <code>else</code> line ends with a colon <code>:</code></li>
+  <li>The lines inside are indented with 4 spaces.</li>
+  <li>Order matters: put the most specific check first.</li>
+  <li>Each <code>if</code> is a diamond in the flowchart.</li>
+ </ul></div>
+ <div class="box real"><h3>Real world</h3><ul><li>A game: if lives == 0, show "Game over"; else keep playing.</li><li>A vending machine: if money >= price, give the drink; else ask for more coins.</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li><code>=</code> stores, <code>==</code> compares. <code>if answer = "10":</code> is a SyntaxError.</li><li><code>"Red"</code> and <code>"red"</code> are not equal, because capitals matter.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>In the code above, the user types 40. What prints?</summary><div class="ans">"Very hot. Drink water!" Only the first true branch runs, even though 40 >= 25 is also true.</div></details>
+  <details><summary>The user types 18. What prints?</summary><div class="ans">"Cool day." (the else branch)</div></details>
+  <details><summary>What is missing? <code>if mood == "happy"</code></summary><div class="ans">The colon at the end: <code>if mood == "happy":</code></div></details>
+ </div>
+ <button class="got-it" data-t="6" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 7 -->
+<section class="topic" id="t7" data-t="Errors & debugging">
+ <div class="th"><div class="num">7</div><div><h2>Errors and debugging</h2><div class="wk">All term</div></div></div>
+ <p class="big">An error message tells you <b>which line</b> and <b>what went wrong</b>. Read it, fix one thing, run again.</p>
+ <table>
+  <tr><th>Error</th><th>What it usually means</th><th>Example</th></tr>
+  <tr><td>SyntaxError</td><td>Python can't read it: missing <code>:</code>, quote or bracket, or <code>=</code> instead of <code>==</code></td><td><code>if x == 5</code></td></tr>
+  <tr><td>IndentationError</td><td>A line inside an if isn't indented</td><td><code>if x:<br>print("hi")</code></td></tr>
+  <tr><td>NameError</td><td>Python doesn't know that name: a typo or a missing variable</td><td><code>print(nmae)</code></td></tr>
+  <tr><td>TypeError</td><td>Mixing types that don't go together</td><td><code>"7" >= 5</code></td></tr>
+  <tr><td>ValueError</td><td>The value can't be converted</td><td><code>int("two")</code></td></tr>
+ </table>
+ <div class="terms">
+  <div class="term"><b>Syntax error</b>The program won't run at all, because the code breaks Python's rules.</div>
+  <div class="term"><b>Logic error</b>It runs, but gives the wrong answer. Only testing finds it.</div>
+  <div class="term"><b>Bug</b>A mistake in a program.</div>
+  <div class="term"><b>Debugging</b>Finding and fixing bugs.</div>
+ </div>
+ <div class="box real"><h3>Real world</h3><ul><li>In 1947, engineers working with Grace Hopper found a real moth stuck in their computer. They taped it into their logbook as the first actual "bug" found.</li><li>AI tools can write code that looks right but is wrong. Never trust code you can't trace.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary><code>print(f"Hi {nmae}")</code>: which error?</summary><div class="ans">NameError: name 'nmae' is not defined (a typo).</div></details>
+  <details><summary>The program runs but says 10 + 5 = 105. Syntax or logic error?</summary><div class="ans">A logic error: it runs, but the answer is wrong. The fix is <code>int()</code>.</div></details>
+ </div>
+ <button class="got-it" data-t="7" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 8 -->
+<section class="topic" id="t8" data-t="Footprints & locks">
+ <div class="th"><div class="num">8</div><div><h2>Digital footprint and account security</h2><div class="wk">Week 9</div></div></div>
+ <p class="big">Everything you do online leaves a trail that can last forever. Protect your accounts with strong passwords and more than one lock.</p>
+ <div class="terms">
+  <div class="term"><b>Digital footprint</b>The trail of data you leave online.</div>
+  <div class="term"><b>Active footprint</b>What you choose to share: posts, comments, photos.</div>
+  <div class="term"><b>Passive footprint</b>Data collected without you posting: searches, location, cookies.</div>
+  <div class="term"><b>Permanence</b>Deleting is not forever. Screenshots, shares and archives keep it.</div>
+  <div class="term"><b>Cookie</b>A small file a website saves to remember what you do.</div>
+  <div class="term"><b>MFA</b>Multifactor authentication: two or more different proofs to log in.</div>
+ </div>
+ <table>
+  <tr><th>MFA proof</th><th>Means</th><th>Example</th></tr>
+  <tr><td>Something you <b>know</b></td><td>a secret</td><td>password, PIN</td></tr>
+  <tr><td>Something you <b>have</b></td><td>an object</td><td>your phone getting a code</td></tr>
+  <tr><td>Something you <b>are</b></td><td>your body</td><td>fingerprint, Face ID</td></tr>
+ </table>
+ <div class="terms">
+  <div class="term"><b>Phishing</b>A fake message pretending to be someone you trust, to steal your details.</div>
+  <div class="term"><b>Social engineering</b>Tricking a person (not a computer) into giving information.</div>
+  <div class="term"><b>Brute force</b>A computer trying every combination until a password works.</div>
+  <div class="term"><b>Strong password</b>Long and hard to guess. A passphrase of random words works well.</div>
+  <div class="term"><b>Firewall</b>A barrier that blocks unwanted traffic from a network.</div>
+  <div class="term"><b>Encryption</b>Scrambling data so only the right person can read it.</div>
+ </div>
+ <div class="box real"><h3>Real world</h3><ul>
+  <li>A deleted post can still exist as a screenshot on someone's phone. The Wayback Machine keeps old copies of websites from years ago.</li>
+  <li>You search for football boots and then see boot adverts everywhere. That's your passive footprint being used.</li>
+  <li>Using a bank card at an ATM is MFA: the card is something you <b>have</b> and the PIN is something you <b>know</b>.</li>
+  <li>"You won a free phone! Log in here" is a classic phishing message.</li>
+ </ul></div>
+ <div class="box rem"><h3>Home account check</h3><ul><li>Turn on MFA (2-step verification).</li><li>Use a different strong password for each account.</li><li>Check your privacy settings and turn off location where it isn't needed.</li><li>Look through your old posts. THINK before you post: is it True, Helpful, Inspiring, Necessary, Kind?</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li>A password plus a security question is <b>not</b> MFA. Both are things you know.</li><li>Fun quizzes asking for your pet's name and birthday may be collecting password clues.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Why does MFA protect you even if a hacker steals your password?</summary><div class="ans">They still need the second proof, such as the code on your phone.</div></details>
+  <details><summary>Fingerprint and password: which two types of proof?</summary><div class="ans">Something you are (fingerprint) and something you know (password).</div></details>
+  <details><summary>Is a website remembering your searches an active or a passive footprint?</summary><div class="ans">Passive: it was collected without you posting anything.</div></details>
+ </div>
+ <button class="got-it" data-t="8" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 9 -->
+<section class="topic" id="t9" data-t="Design project">
+ <div class="th"><div class="num">9</div><div><h2>Design project: from brief to plan</h2><div class="wk">Week 10</div></div></div>
+ <p class="big">A design project starts with a brief and real users. You find out what they need, then plan the program as pseudocode and a flowchart before coding.</p>
+ <div class="terms">
+  <div class="term"><b>Design brief</b>The task you are given. Ours: a helpful text program for new GIS pupils (a quiz, a phrase translator or an info-bot).</div>
+  <div class="term"><b>Purpose</b>Why the program exists and who it helps.</div>
+  <div class="term"><b>Requirements</b>What the program must do, found by asking users.</div>
+  <div class="term"><b>Survey</b>Questions you ask real users (we asked 3).</div>
+  <div class="term"><b>Competing considerations</b>Two good things that pull against each other, so you must choose (a trade-off).</div>
+  <div class="term"><b>Criteria</b>The checklist used to judge if the program is good.</div>
+  <div class="term"><b>Milestones</b>Checkpoints in your plan: design, build, test, finish.</div>
+  <div class="term"><b>Client / user</b>The person you build it for, and the people who use it.</div>
+ </div>
+ <div class="box real"><h3>Real world</h3><ul><li>An architect doesn't build until the family says what they need: how many rooms, the budget, and when it must be finished.</li><li>Trade-off example: more quiz questions teach more, but the quiz takes longer and users may get bored.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Why do we survey users before coding?</summary><div class="ans">To find the real requirements, what users actually need, instead of guessing.</div></details>
+  <details><summary>Give one competing consideration for a phrase translator.</summary><div class="ans">For example: more phrases are more useful, but take longer to build and test.</div></details>
+ </div>
+ <button class="got-it" data-t="9" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- 10 -->
+<section class="topic" id="t10" data-t="Build, test, evaluate">
+ <div class="th"><div class="num">10</div><div><h2>Build, test and evaluate</h2><div class="wk">Weeks 11 to 12</div></div></div>
+ <p class="big">Turn each pseudocode line into a Python line. Test every branch with different inputs, save versions, and judge your program against the criteria.</p>
+ <table>
+  <tr><th>Pseudocode</th><th>Python</th></tr>
+  <tr><td><code>INPUT topic</code></td><td><code>topic = input("Topic? ")</code></td></tr>
+  <tr><td><code>IF topic = "lunch" THEN</code></td><td><code>if topic == "lunch":</code></td></tr>
+  <tr><td><code>ELSE IF ...</code></td><td><code>elif ...:</code></td></tr>
+  <tr><td><code>ELSE</code></td><td><code>else:</code></td></tr>
+  <tr><td><code>OUTPUT "Hi"</code></td><td><code>print("Hi")</code></td></tr>
+  <tr><td><code>END IF</code></td><td>(no line: indentation shows the end)</td></tr>
+ </table>
+ <div class="terms">
+  <div class="term"><b>Implement</b>Turn your design into working code.</div>
+  <div class="term"><b>Testing</b>Trying inputs on purpose to reach every branch, including unusual ones like "Lunch" or "two".</div>
+  <div class="term"><b>Version saving</b>Save v1, v2, v3 so you can go back if something breaks.</div>
+  <div class="term"><b>Evaluate</b>Judge the program against the criteria: what works, the trade-offs, what to do next.</div>
+  <div class="term"><b>Peer feedback</b>Classmates try it and tell you one strength and one thing to improve.</div>
+  <div class="term"><b>Comments in code</b>Explain each part with <code>#</code> notes using the right technical words.</div>
+ </div>
+ <div class="box real"><h3>Real world</h3><ul><li>Game companies let beta testers play early versions to find bugs before release.</li><li>Google Docs keeps a version history so you can go back to an older copy.</li><li>Judges in a cooking competition use a score sheet. That score sheet is their criteria.</li></ul></div>
+ <div class="box watch"><h3>Watch out</h3><ul><li>Testing only the "happy" input isn't enough. Test every branch, and test what users might really type.</li></ul></div>
+ <div class="check"><h3>Check yourself</h3>
+  <details><summary>Your info-bot has 3 topics plus an else. How many tests do you need at least?</summary><div class="ans">4: one for each topic, and one to reach the else.</div></details>
+  <details><summary>Why save v1 before adding a new feature?</summary><div class="ans">If the new feature breaks the program, you can go back to the working version.</div></details>
+ </div>
+ <button class="got-it" data-t="10" aria-pressed="false">I've got this</button>
+</section>
+
+<!-- Flashcards -->
+<section class="topic" id="cards">
+ <div class="th"><div class="num">★</div><div><h2>Rapid flashcards</h2><div class="wk">Tap the card to flip it</div></div></div>
+ <div class="fc" id="fc" role="button" tabindex="0" aria-live="polite"><div><div class="q" id="fq"></div><div class="tip" id="ftip">Tap to see the meaning</div></div></div>
+ <p class="fcn" id="fn"></p>
+ <div class="fcrow"><button class="pill" id="fprev">Back</button><button class="pill go" id="fnext">Next card</button><button class="pill" id="fmix">Shuffle</button></div>
+</section>
+</main>
+<footer>Golden International School, Year 7 Digital Technologies, Term 1</footer>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem('y7rev_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('y7rev_'+k,JSON.stringify(v))}catch(e){}}};
+const got=store.get('got',{});
+$('#chips').innerHTML=$$('section.topic[data-t]').map((s,i)=>`<a href="#${s.id}" data-t="${i+1}">${i+1}. ${s.dataset.t}</a>`).join('')+'<a href="#cards">Flashcards</a>';
+function paint(){
+  let n=0;$$('.got-it').forEach(b=>{const on=!!got[b.dataset.t];b.setAttribute('aria-pressed',on);b.textContent=on?"Got it ✓":"I've got this";if(on)n++});
+  $$('#chips a[data-t]').forEach(a=>a.classList.toggle('got',!!got[a.dataset.t]));
+  $('#pbar').style.width=(n*10)+'%';$('#pct').textContent=`${n} of 10 done`;
+}
+$$('.got-it').forEach(b=>b.onclick=()=>{got[b.dataset.t]=!got[b.dataset.t];store.set('got',got);paint()});
+paint();
+
+const CARDS=[
+['Decomposition','Breaking a big problem into smaller parts.'],
+['Pattern recognition','Spotting what is the same or repeats.'],
+['Abstraction','Keeping the important details and hiding the rest.'],
+['Algorithm','Step-by-step instructions to solve a problem.'],
+['Pseudocode','A plan written in simple English-like steps (INPUT, OUTPUT, IF, ELSE).'],
+['Diamond (flowchart)','A decision with two ways out: Yes and No.'],
+['Parallelogram (flowchart)','Input or output.'],
+['Sequence','Steps run in order, top to bottom.'],
+['Selection','The program chooses a path: if, elif, else.'],
+['Iteration','Repeating steps (a loop).'],
+['Trace table','A table showing each variable’s value after each step.'],
+['Shell','The part of Thonny where output and errors appear.'],
+['String (str)','Text inside quotes, like "Sabaidee" or "67".'],
+['Comment','A note starting with #. Python skips it.'],
+['Variable','A named box that stores a value.'],
+['input()','Asks the user a question and returns what they type, always as text.'],
+['f-string','f"Hi {name}" puts a variable’s value into text.'],
+['int','A whole number, like 12.'],
+['float','A number with a decimal point, like 4.5.'],
+['int()','Changes text into a whole number: int("12") gives 12.'],
+['= and ==','= stores a value. == checks if two values are equal.'],
+['elif','"Else if": the next check when the one before was False.'],
+['else','Runs when no condition above it was True.'],
+['SyntaxError','Python can’t read the line: a missing colon, quote or bracket.'],
+['IndentationError','A line inside an if is not indented.'],
+['NameError','Python doesn’t know that name, often because of a typo.'],
+['TypeError','Mixing types that don’t go together, like "7" >= 5.'],
+['ValueError','A value can’t be converted, like int("two").'],
+['Logic error','The program runs but gives the wrong answer.'],
+['Digital footprint','The trail of data you leave online.'],
+['Passive footprint','Data collected without you posting, like searches and location.'],
+['Permanence','Deleted is not gone: screenshots, shares and archives keep it.'],
+['MFA','Two or more different proofs to log in: know, have, are.'],
+['Phishing','A fake message pretending to be someone you trust, to steal your details.'],
+['Brute force','Trying every combination until a password works.'],
+['Design brief','The task you are given to design a solution for.'],
+['Requirements','What the program must do, found by asking users.'],
+['Trade-off','Choosing between two good things that pull against each other.'],
+['Criteria','The checklist used to judge if a solution is good.'],
+['Version saving','Saving v1, v2, v3 so you can go back if something breaks.']
+];
+let order=CARDS.map((_,i)=>i),ci=0,flipped=false;
+function show(){const c=CARDS[order[ci]];$('#fq').textContent=flipped?c[1]:c[0];$('#fq').className=flipped?'a':'q';$('#ftip').textContent=flipped?c[0]:'Tap to see the meaning';$('#fn').textContent=`Card ${ci+1} of ${CARDS.length}`}
+const flip=()=>{flipped=!flipped;show()};
+$('#fc').onclick=flip;$('#fc').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}};
+$('#fnext').onclick=()=>{ci=(ci+1)%CARDS.length;flipped=false;show()};
+$('#fprev').onclick=()=>{ci=(ci-1+CARDS.length)%CARDS.length;flipped=false;show()};
+$('#fmix').onclick=()=>{for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}ci=0;flipped=false;show()};
+show();
+})();
+</script>
+</body>
+</html>
