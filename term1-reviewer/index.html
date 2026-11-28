@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y7 Term 1 Reviewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+Lao:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --ink:#272d34; --soft:#56606b; --muted:#6b7480; --line:#d5dbe2;
+  --primary:#2f5d8a; --primary-d:#244a6f; --ok:#2e7350; --okbg:#e4f1e9; --bad:#9f4239; --badbg:#f7e8e6; --warnbg:#fbf3df;
+  --code:#20252c; --tc:#5b7fa6; --tcl:rgba(91,127,166,.12);
+  --r:16px;
+}
+*{box-sizing:border-box}
+html{font-size:100%}
+html.s1{font-size:112.5%} html.s2{font-size:125%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,"Noto Sans Lao",sans-serif;font-size:1.0625rem;line-height:1.55}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #e0a23a;outline-offset:2px}
+a{color:var(--primary)}
+.lo{display:none;font-family:"Noto Sans Lao","Atkinson Hyperlegible",sans-serif;color:var(--muted);font-size:.9em;font-weight:400;line-height:1.6;margin-top:2px}
+body.lao .lo{display:block}
+
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+
+/* header */
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.hrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700}
+.logo i{font-style:normal;background:var(--primary);color:#fff;border-radius:10px;padding:6px 8px;font-size:.85rem}
+nav.main{display:flex;gap:4px}
+nav.main a{text-decoration:none;color:var(--soft);padding:9px 12px;border-radius:10px;font-weight:700;min-height:44px;display:flex;align-items:center}
+nav.main a[aria-current="page"]{background:var(--tcl);color:var(--ink)}
+.ctrls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:8px 11px;min-height:44px;min-width:44px;font-weight:700;color:var(--soft)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:#fff}
+
+main{padding:22px 0 60px}
+h1{font-size:1.85rem;line-height:1.2;margin:0 0 6px}
+h2{font-size:1.3rem;margin:28px 0 12px}
+h3{font-size:1.1rem;margin:0}
+p{margin:0 0 10px}
+.muted{color:var(--muted)}
+
+/* buttons */
+.btn{border:2px solid var(--primary);background:var(--surface);color:var(--primary);border-radius:12px;padding:11px 18px;font-weight:700;min-height:48px}
+.btn.primary{background:var(--primary);color:#fff}
+.btn.primary:hover{background:var(--primary-d)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.text{border-color:transparent;background:none;text-decoration:underline;padding:11px 8px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.says{display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.say{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:.85rem;font-weight:700;color:var(--soft);min-height:36px}
+.say[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* map */
+.top{display:flex;gap:22px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.top .t{flex:1;min-width:230px}
+.ring{position:relative;width:108px;height:108px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:.85rem;line-height:1.2}
+.ring b span{display:block;font-size:1.5rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{display:flex;gap:14px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--tc);border-radius:var(--r);padding:14px 16px;text-decoration:none;color:var(--ink);min-height:72px}
+.tile.next{border:2px solid var(--primary);border-left:6px solid var(--tc);box-shadow:0 0 0 3px rgba(47,93,138,.15)}
+.tile .n{flex:none;width:36px;height:36px;border-radius:50%;background:var(--tcl);display:grid;place-items:center;font-weight:700}
+.tile .body{flex:1;min-width:0}
+.tile .st{font-size:.8rem;font-weight:700;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.tile .st.next{background:var(--primary);color:#fff}
+.tile .st.done{background:var(--okbg);color:var(--ok)}
+.dashes{display:flex;gap:4px;margin-top:6px}
+.dashes i{width:22px;height:5px;border-radius:3px;background:#dde2e8}
+.dashes i.on{background:var(--tc)}
+.note{background:var(--warnbg);border-radius:12px;padding:10px 14px;font-size:.9rem;margin-top:14px}
+
+/* topic */
+.crumb{font-size:.95rem;color:var(--soft);margin-bottom:8px}
+.crumb a{font-weight:700}
+.big{background:var(--tcl);border-left:6px solid var(--tc);border-radius:var(--r);padding:14px 18px;margin:12px 0 18px}
+.big .lab{font-size:.85rem;font-weight:700;color:var(--soft)}
+.big p{font-size:1.15rem;font-weight:700;margin:2px 0 0}
+ol.stepper{list-style:none;display:flex;gap:6px;padding:0;margin:0 0 18px;flex-wrap:wrap}
+ol.stepper li{display:flex;align-items:center;gap:6px}
+ol.stepper li+li::before{content:">";color:var(--muted);margin-right:2px}
+ol.stepper button{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px;font-weight:700;min-height:44px;color:var(--soft)}
+ol.stepper button[aria-current="step"]{background:var(--tc);border-color:var(--tc);color:#fff}
+ol.stepper button:disabled{opacity:.5;cursor:not-allowed}
+.star{color:#b9c0c8}.star.on{color:#b8860b}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+
+ol.cards{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;gap:14px}
+.card .num{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
+.card .num b{width:30px;height:30px;border-radius:50%;background:var(--tcl);display:grid;place-items:center;font-size:.9rem}
+.card .num span{font-size:1.5rem;line-height:1}
+.card .c{flex:1;min-width:0}
+.card p{margin:4px 0 0}
+pre.code{background:var(--code);color:#e6e9ee;border-radius:12px;padding:12px 14px;margin:10px 0 0;font:.92rem/1.6 Consolas,"Courier New",monospace;white-space:pre-wrap;word-break:break-word}
+pre.code .k{color:#c3b5ff;font-weight:700}pre.code .s{color:#9fdcb6}pre.code .f{color:#8fd0ff}pre.code .c{color:#98a2b3}pre.code .n{color:#ffc78a}
+.shape{margin-top:8px}
+.locks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.locks div{background:var(--tcl);border-radius:12px;padding:8px;text-align:center;font-size:.92rem}
+.locks div b{display:block;font-size:1.4rem}
+
+/* activities */
+.act{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;min-height:48px;text-align:left;font-weight:700}
+.chip[aria-pressed="true"]{border-color:var(--primary);background:#e8eef5}
+.chip.mono,.mono{font-family:Consolas,"Courier New",monospace}
+.boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:14px}
+.box{border:2px dashed #b9c3ce;background:#fafbfc;border-radius:14px;padding:10px;min-height:96px;text-align:left}
+.box h4{margin:0 0 6px;font-size:1rem}
+.box .in{display:flex;flex-direction:column;gap:4px}
+.box .in span{background:var(--okbg);color:var(--ok);border-radius:8px;padding:4px 8px;font-size:.88rem;font-weight:700}
+.msg{min-height:1.5em;font-weight:700;margin-top:10px}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+.olist{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px;counter-reset:o}
+.olist li{background:var(--okbg);border-radius:10px;padding:8px 12px;font-weight:700;counter-increment:o}
+.olist li::before{content:counter(o) ". "}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;max-width:340px}
+.field label{font-weight:700}
+.field input{border:2px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px}
+.field .err{color:var(--bad);font-weight:700;font-size:.92rem;min-height:1.2em}
+.frow{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.shell{background:var(--code);color:#e6e9ee;border-radius:12px;padding:10px 14px;font:.92rem/1.6 Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:64px;margin-top:10px}
+.shell .in{color:#8fd0ff}
+.lines{display:grid;gap:6px}
+.line{display:flex;gap:10px;align-items:center;border:2px solid var(--line);background:#fafbfc;border-radius:10px;padding:8px 12px;font:.95rem Consolas,"Courier New",monospace;text-align:left;min-height:46px}
+.line.hit{border-color:var(--tc);background:var(--tcl)}
+.line .ln{color:var(--muted);width:1.4em}
+.vars{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.vbox{border:2px solid var(--tc);border-radius:12px;padding:6px 12px;background:var(--tcl)}
+.vbox small{display:block;color:var(--soft);font-weight:700}
+.vbox b{font-family:Consolas,monospace}
+.ticks{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.ticks li{display:flex;gap:8px;align-items:center;border-radius:10px;padding:6px 10px;background:#f3f5f7}
+.ticks li.on{background:var(--okbg);color:var(--ok);font-weight:700}
+.ticks li i{font-style:normal;width:1.3em}
+.post{border:1px solid var(--line);border-radius:14px;padding:12px;max-width:420px}
+.post.gone{opacity:.55;font-style:italic}
+.copies{display:grid;gap:8px;margin-top:10px}
+.copies div{background:var(--badbg);border-radius:10px;padding:8px 12px;font-weight:700}
+.pp{font:1.2rem Consolas,monospace;font-weight:700;background:var(--tcl);border-radius:10px;padding:8px 12px;display:inline-block;margin-top:8px;word-break:break-all}
+.locked{font-size:.92rem;color:var(--soft);margin-top:8px}
+
+/* questions */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:14px}
+.q .qn{font-size:.85rem;font-weight:700;color:var(--soft)}
+.q h3{margin:2px 0 0}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opt{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px;text-align:left;font-weight:700;min-height:56px}
+.opt:hover:not(:disabled){border-color:var(--primary)}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt:disabled{cursor:default}
+.fb{margin-top:10px;border-radius:12px;padding:10px 14px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.fb b{display:block}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+
+/* flashcards */
+.fc{width:100%;min-height:220px;border:2px solid var(--tc);background:var(--surface);border-radius:20px;padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:6px}
+.fc .front{font-size:1.6rem;font-weight:700}
+.fc .back{font-size:1.25rem}
+.fc small{color:var(--muted)}
+.streak{display:flex;gap:14px;flex-wrap:wrap;font-weight:700;color:var(--soft);margin-bottom:10px}
+.streak b{color:var(--ink)}
+
+@media (max-width:700px){
+  .tiles,.opts{grid-template-columns:1fr}
+  h1{font-size:1.5rem}
+  .hrow{gap:8px}
+  .logo span{display:none}
+  nav.main a{padding:8px 9px}
+  .ctrls{margin-left:0;width:100%;justify-content:space-between}
+  .card{padding:14px}
+  .locks{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){.btn,.opt,.chip{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<header><div class="wrap hrow">
+  <a class="logo" href="#/map"><i>GIS</i><span>Y7 Reviewer</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="#/map" data-nav="map">Map</a><a href="#/cards" data-nav="cards">Cards</a><a href="#/final" data-nav="final">Challenge</a>
+  </nav>
+  <div class="ctrls">
+    <div class="seg" role="group" aria-label="Text size">
+      <button data-size="0" aria-label="Normal text">A</button><button data-size="1" aria-label="Bigger text">A+</button><button data-size="2" aria-label="Biggest text">A++</button>
+    </div>
+    <div class="seg" role="group" aria-label="Language">
+      <button data-lang="en">English</button><button data-lang="lo">English + ລາວ</button>
+    </div>
+  </div>
+</div></header>
+<main class="wrap" id="view" tabindex="-1"></main>
+
+<script>
+(function(){
+"use strict";
+const DATA={"topics": [{"id": 1, "short": "Thinking skills", "colour": "#5b7fa6", "title": ["Thinking like a computer scientist", "ຄິດແບບນັກວິທະຍາສາດຄອມພິວເຕີ"], "big": ["Before you code, you think: break the problem into parts, spot patterns, keep what matters, then write the steps.", "ກ່ອນຂຽນ code ໃຫ້ຄິດກ່ອນ: ແບ່ງບັນຫາອອກເປັນສ່ວນ, ຊອກຫາສິ່ງທີ່ຊ້ຳກັນ, ເກັບສິ່ງທີ່ສຳຄັນ, ແລ້ວຂຽນຂັ້ນຕອນ."], "learn": [{"icon": "🧩", "h": ["Decomposition", "Decomposition"], "t": ["Break a big problem into smaller parts you can solve one at a time.", "ແບ່ງບັນຫາໃຫຍ່ອອກເປັນສ່ວນນ້ອຍໆ ທີ່ແກ້ໄດ້ເທື່ອລະສ່ວນ."], "a": "t1l0"}, {"icon": "🔁", "h": ["Pattern recognition", "Pattern recognition"], "t": ["Spot what is the same or what repeats. Then you can solve it once and use it again.", "ຊອກຫາສິ່ງທີ່ຄືກັນ ຫຼື ຊ້ຳກັນ. ແລ້ວເຈົ້າແກ້ເທື່ອດຽວ ແລະ ໃຊ້ຄືນໄດ້."], "a": "t1l1"}, {"icon": "🗺️", "h": ["Abstraction", "Abstraction"], "t": ["Keep the important details and hide the rest. A map app shows roads, not every tree.", "ເກັບລາຍລະອຽດທີ່ສຳຄັນ ແລະ ເຊື່ອງສ່ວນທີ່ເຫຼືອ. ແອັບແຜນທີ່ສະແດງຖະໜົນ, ບໍ່ແມ່ນທຸກຕົ້ນໄມ້."], "a": "t1l2"}, {"icon": "📝", "h": ["Algorithm", "Algorithm"], "t": ["An algorithm is step-by-step instructions to solve a problem, like a recipe.", "Algorithm ແມ່ນຄຳແນະນຳເທື່ອລະຂັ້ນຕອນ ເພື່ອແກ້ບັນຫາ, ຄືກັບສູດອາຫານ."], "a": "t1l3"}, {"icon": "🙋", "h": ["Ask the users", "ຖາມຜູ້ໃຊ້"], "t": ["Requirements come from the people who will use it. Ask them with a survey. Don't guess.", "ສິ່ງທີ່ຕ້ອງມີມາຈາກຄົນທີ່ຈະໃຊ້ມັນ. ຖາມເຂົາເຈົ້າດ້ວຍແບບສອບຖາມ. ຢ່າເດົາ."], "a": "t1l4"}], "tryit": {"type": "sort", "h": ["Sort the thinking skills", "ຈັດກຸ່ມທັກສະການຄິດ"], "t": ["Tap a card, then tap the skill it shows.", "ແຕະບັດ, ແລ້ວແຕະທັກສະທີ່ມັນສະແດງ."], "boxes": [["Decomposition", "Decomposition"], ["Pattern recognition", "Pattern recognition"], ["Abstraction", "Abstraction"], ["Algorithm", "Algorithm"]], "cards": [[["Split a class party into food, music and games", "ແບ່ງງານລ້ຽງຫ້ອງເປັນ ອາຫານ, ດົນຕີ ແລະ ເກມ"], 0], [["Split a delivery app into order, pay and deliver", "ແບ່ງແອັບສົ່ງອາຫານເປັນ ສັ່ງ, ຈ່າຍ ແລະ ສົ່ງ"], 0], [["The mini mart queue is always longest at lunch", "ແຖວຮ້ານມິນິມາດຍາວທີ່ສຸດສະເໝີຕອນທ່ຽງ"], 1], [["Every quiz question does: ask, check, reply", "ທຸກຄຳຖາມ quiz ເຮັດຄືກັນ: ຖາມ, ກວດ, ຕອບ"], 1], [["A bus map shows only the stops", "ແຜນທີ່ລົດເມສະແດງແຕ່ບ່ອນຈອດ"], 2], [["A school plan shows rooms, not desks", "ແຜນຜັງໂຮງຮຽນສະແດງຫ້ອງ, ບໍ່ແມ່ນໂຕະ"], 2], [["Soak, drain, steam, serve the sticky rice", "ແຊ່, ເທນ້ຳອອກ, ໜຶ້ງ, ຕັກເຂົ້າໜຽວ"], 3], [["1. Ask the name  2. Say hello  3. Ask the topic", "1. ຖາມຊື່  2. ທັກທາຍ  3. ຖາມຫົວຂໍ້"], 3]], "a": "t1t"}, "check": [{"q": ["Planning a class party as food, music, games and invitations. Which skill is this?", "ວາງແຜນງານລ້ຽງຫ້ອງເປັນ ອາຫານ, ດົນຕີ, ເກມ ແລະ ບັດເຊີນ. ນີ້ແມ່ນທັກສະໃດ?"], "o": [["Decomposition", ""], ["Abstraction", ""], ["Pattern recognition", ""], ["Debugging", ""]], "why": ["One big job is broken into smaller parts.", "ວຽກໃຫຍ່ໜຶ່ງຖືກແບ່ງອອກເປັນສ່ວນນ້ອຍ."], "a": "t1q0"}, {"q": ["A bus map shows only the stops. Which skill is that?", "ແຜນທີ່ລົດເມສະແດງແຕ່ບ່ອນຈອດ. ນີ້ແມ່ນທັກສະໃດ?"], "o": [["Abstraction", ""], ["Decomposition", ""], ["Algorithm", ""], ["Testing", ""]], "why": ["It keeps what you need and hides the rest.", "ມັນເກັບສິ່ງທີ່ເຈົ້າຕ້ອງການ ແລະ ເຊື່ອງສ່ວນທີ່ເຫຼືອ."], "a": "t1q1"}, {"q": ["Where do requirements come from?", "ສິ່ງທີ່ຕ້ອງມີມາຈາກໃສ?"], "o": [["Asking the users", "ການຖາມຜູ້ໃຊ້"], ["Guessing", "ການເດົາ"], ["Copying a friend", "ການກັອບປີ້ໝູ່"], ["The computer", "ຄອມພິວເຕີ"]], "why": ["The users know what they need, so you ask them, for example with a survey.", "ຜູ້ໃຊ້ຮູ້ວ່າເຂົາຕ້ອງການຫຍັງ, ສະນັ້ນເຈົ້າຖາມເຂົາ, ເຊັ່ນ ດ້ວຍແບບສອບຖາມ."], "a": "t1q2"}], "big_a": "t1b"}, {"id": 2, "short": "Flowcharts", "colour": "#b07d3c", "title": ["Flowcharts and pseudocode", "Flowchart ແລະ pseudocode"], "big": ["The same algorithm can be drawn as a flowchart or written as pseudocode. Both are plans you make before you code.", "Algorithm ດຽວກັນ ສາມາດແຕ້ມເປັນ flowchart ຫຼື ຂຽນເປັນ pseudocode. ທັງສອງແມ່ນແຜນທີ່ເຈົ້າເຮັດກ່ອນຂຽນ code."], "learn": [{"icon": "⬭", "h": ["Oval: start and end", "ຮູບໄຂ່: ເລີ່ມ ແລະ ຈົບ"], "shape": "oval", "t": ["Every flowchart starts and finishes with an oval.", "ທຸກ flowchart ເລີ່ມ ແລະ ຈົບດ້ວຍຮູບໄຂ່."], "a": "t2l0"}, {"icon": "▱", "h": ["Parallelogram: input and output", "ຮູບສີ່ແຈຂ້າງຂະໜານ: input ແລະ output"], "shape": "io", "t": ["Use it for INPUT (the user types) and OUTPUT (the program shows).", "ໃຊ້ສຳລັບ INPUT (ຜູ້ໃຊ້ພິມ) ແລະ OUTPUT (ໂປຣແກຣມສະແດງ)."], "a": "t2l1"}, {"icon": "▭", "h": ["Rectangle: a process", "ຮູບສີ່ແຈ: ການດຳເນີນການ"], "shape": "rect", "t": ["A rectangle does one job, like total = a + b.", "ຮູບສີ່ແຈເຮັດວຽກໜຶ່ງຢ່າງ, ເຊັ່ນ total = a + b."], "a": "t2l2"}, {"icon": "◇", "h": ["Diamond: a decision", "ຮູບເພັດ: ການຕັດສິນໃຈ"], "shape": "diamond", "t": ["A diamond asks a question with two ways out: Yes and No. Label both.", "ຮູບເພັດຖາມຄຳຖາມ ທີ່ມີທາງອອກສອງທາງ: ແມ່ນ ແລະ ບໍ່. ໝາຍທັງສອງ."], "a": "t2l3"}, {"icon": "📄", "h": ["Pseudocode", "Pseudocode"], "t": ["Pseudocode is a plan in simple English-like steps: INPUT, OUTPUT, IF, THEN, ELSE, END IF.", "Pseudocode ແມ່ນແຜນເປັນຂັ້ນຕອນງ່າຍໆຄ້າຍພາສາອັງກິດ: INPUT, OUTPUT, IF, THEN, ELSE, END IF."], "code": "INPUT age\nIF age >= 12 THEN\n    OUTPUT \"You can join\"\nELSE\n    OUTPUT \"Not yet\"\nEND IF", "lang": "pseudo", "a": "t2l4"}, {"icon": "🔍", "h": ["Trace it", "Trace"], "t": ["To trace, follow the steps one at a time with a test input. A trace table records each value.", "ເພື່ອ trace, ໃຫ້ເຮັດຕາມຂັ້ນຕອນເທື່ອລະອັນດ້ວຍ input ທົດສອບ. Trace table ບັນທຶກແຕ່ລະຄ່າ."], "a": "t2l5"}], "tryit": {"type": "sort", "h": ["Pick the right shape", "ເລືອກຮູບຮ່າງທີ່ຖືກຕ້ອງ"], "t": ["Tap a card, then tap the flowchart shape it needs.", "ແຕະບັດ, ແລ້ວແຕະຮູບຮ່າງ flowchart ທີ່ມັນຕ້ອງການ."], "boxes": [["Oval", "ຮູບໄຂ່"], ["Parallelogram", "ຮູບສີ່ແຈຂ້າງຂະໜານ"], ["Rectangle", "ຮູບສີ່ແຈ"], ["Diamond", "ຮູບເພັດ"]], "cards": [[["Start", "ເລີ່ມ"], 0], [["End", "ຈົບ"], 0], [["INPUT age", "INPUT age"], 1], [["OUTPUT \"Hi\"", "OUTPUT \"Hi\""], 1], [["total = a + b", "total = a + b"], 2], [["score = score + 1", "score = score + 1"], 2], [["Is age >= 12?", "age >= 12 ບໍ?"], 3], [["Is the PIN correct?", "PIN ຖືກບໍ?"], 3]], "a": "t2t"}, "check": [{"q": ["Which flowchart shape asks a question?", "ຮູບຮ່າງ flowchart ໃດຖາມຄຳຖາມ?"], "o": [["Diamond", "ຮູບເພັດ"], ["Oval", "ຮູບໄຂ່"], ["Rectangle", "ຮູບສີ່ແຈ"], ["Parallelogram", "ຮູບສີ່ແຈຂ້າງຂະໜານ"]], "why": ["A diamond is a decision with a Yes and a No arrow.", "ຮູບເພັດແມ່ນການຕັດສິນໃຈ ທີ່ມີລູກສອນ ແມ່ນ ແລະ ບໍ່."], "a": "t2q0"}, {"q": ["Which shape do you use for INPUT name?", "ເຈົ້າໃຊ້ຮູບຮ່າງໃດສຳລັບ INPUT name?"], "o": [["Parallelogram", "ຮູບສີ່ແຈຂ້າງຂະໜານ"], ["Rectangle", "ຮູບສີ່ແຈ"], ["Diamond", "ຮູບເພັດ"], ["Oval", "ຮູບໄຂ່"]], "why": ["Input and output always use the parallelogram.", "Input ແລະ output ໃຊ້ຮູບສີ່ແຈຂ້າງຂະໜານສະເໝີ."], "a": "t2q1"}, {"q": ["Trace the pseudocode with age = 10. What is the output?", "Trace pseudocode ດ້ວຍ age = 10. Output ແມ່ນຫຍັງ?"], "o": [["Not yet", ""], ["You can join", ""], ["10", ""], ["Nothing", "ບໍ່ມີຫຍັງ"]], "why": ["10 >= 12 is false, so the ELSE path runs.", "10 >= 12 ບໍ່ຈິງ, ສະນັ້ນເສັ້ນທາງ ELSE ເຮັດວຽກ."], "a": "t2q2"}, {"q": ["Which are the three control structures?", "Control structure ສາມຢ່າງແມ່ນຫຍັງ?"], "o": [["Sequence, selection, iteration", ""], ["Input, output, process", ""], ["Start, middle, end", ""], ["Oval, diamond, arrow", ""]], "why": ["Sequence runs in order, selection chooses, iteration repeats.", "Sequence ເຮັດຕາມລຳດັບ, selection ເລືອກ, iteration ເຮັດຊ້ຳ."], "a": "t2q3"}], "big_a": "t2b"}, {"id": 3, "short": "Thonny and print", "colour": "#3f8f86", "title": ["Thonny: print, strings and comments", "Thonny: print, string ແລະ comment"], "big": ["Python runs your lines from top to bottom. print() shows something in the shell.", "Python ແລ່ນແຖວຂອງເຈົ້າຈາກເທິງລົງລຸ່ມ. print() ສະແດງບາງສິ່ງໃນ shell."], "learn": [{"icon": "🖥️", "h": ["Editor and shell", "Editor ແລະ shell"], "t": ["You write and save your program in the editor at the top. The output and errors appear in the shell below.", "ເຈົ້າຂຽນ ແລະ ບັນທຶກໂປຣແກຣມໃນ editor ຢູ່ເທິງ. Output ແລະ error ສະແດງໃນ shell ຢູ່ລຸ່ມ."], "a": "t3l0"}, {"icon": "💬", "h": ["print and strings", "print ແລະ string"], "t": ["A string is text inside quotes. print() shows it in the shell.", "String ແມ່ນຂໍ້ຄວາມຢູ່ໃນເຄື່ອງໝາຍວົງຢືມ. print() ສະແດງມັນໃນ shell."], "code": "print(\"Hello, Year 7!\")\nprint(\"Sabaidee from my computer\")", "a": "t3l1"}, {"icon": "🗒️", "h": ["Comments", "Comment"], "t": ["A comment starts with #. Python skips it. Use comments to explain your code.", "Comment ເລີ່ມດ້ວຍ #. Python ຂ້າມມັນ. ໃຊ້ comment ເພື່ອອະທິບາຍ code."], "code": "# My first program\nprint(\"Hi\")   # this line says hi", "a": "t3l2"}, {"icon": "🔤", "h": ["Quotes make it text", "ວົງຢືມເຮັດໃຫ້ເປັນຂໍ້ຄວາມ"], "t": ["print(\"2 + 3\") shows 2 + 3. print(2 + 3) shows 5.", "print(\"2 + 3\") ສະແດງ 2 + 3. print(2 + 3) ສະແດງ 5."], "a": "t3l3"}, {"icon": "🔠", "h": ["Capitals matter", "ຕົວພິມໃຫຍ່ສຳຄັນ"], "t": ["Python is case-sensitive. Print with a capital P does not work.", "Python ແຍກຕົວພິມໃຫຍ່ ແລະ ນ້ອຍ. Print ທີ່ມີ P ໃຫຍ່ໃຊ້ບໍ່ໄດ້."], "a": "t3l4"}, {"icon": "💾", "h": ["Save with the class pattern", "ບັນທຶກຕາມຮູບແບບຂອງຫ້ອງ"], "t": ["Name your file like Y7_Surname_Project.py so you can find it again.", "ຕັ້ງຊື່ໄຟລ໌ແບບ Y7_Surname_Project.py ເພື່ອຊອກຫາຄືນໄດ້."], "a": "t3l5"}], "tryit": {"type": "comment", "h": ["Make the shell match", "ເຮັດໃຫ້ shell ກົງກັນ"], "t": ["Tap a line to add or remove a #. Make the shell show only the two target lines, then press Run.", "ແຕະແຖວເພື່ອເພີ່ມ ຫຼື ລຶບ #. ເຮັດໃຫ້ shell ສະແດງແຕ່ສອງແຖວເປົ້າໝາຍ, ແລ້ວກົດ Run."], "a": "t3t"}, "check": [{"q": ["Where does the output appear in Thonny?", "Output ສະແດງຢູ່ໃສໃນ Thonny?"], "o": [["In the shell", "ໃນ shell"], ["In the editor", "ໃນ editor"], ["In a comment", "ໃນ comment"], ["In the file name", "ໃນຊື່ໄຟລ໌"]], "why": ["You type in the editor. Python answers in the shell.", "ເຈົ້າພິມໃນ editor. Python ຕອບໃນ shell."], "a": "t3q0"}, {"q": ["What does print(\"5\" + \"5\") show?", "print(\"5\" + \"5\") ສະແດງຫຍັງ?"], "o": [["55", ""], ["10", ""], ["\"5\" + \"5\"", ""], ["An error", "Error"]], "why": ["They are strings, so + joins them together.", "ພວກມັນແມ່ນ string, ສະນັ້ນ + ເອົາມາຕໍ່ກັນ."], "a": "t3q1"}, {"q": ["What does Python do with a line that starts with #?", "Python ເຮັດຫຍັງກັບແຖວທີ່ເລີ່ມດ້ວຍ #?"], "o": [["Skips it", "ຂ້າມມັນ"], ["Prints it", "Print ມັນ"], ["Shows an error", "ສະແດງ error"], ["Runs it twice", "ແລ່ນມັນສອງເທື່ອ"]], "why": ["A comment is a note for people. Python skips it.", "Comment ແມ່ນບັນທຶກສຳລັບຄົນ. Python ຂ້າມມັນ."], "a": "t3q2"}], "big_a": "t3b"}, {"id": 4, "short": "Variables and input", "colour": "#7a68a6", "title": ["Variables, input and f-strings", "Variable, input ແລະ f-string"], "big": ["A variable is a named box that stores a value. input() asks the user and stores what they type.", "Variable ແມ່ນກ່ອງທີ່ມີຊື່ ທີ່ເກັບຄ່າ. input() ຖາມຜູ້ໃຊ້ ແລະ ເກັບສິ່ງທີ່ເຂົາພິມ."], "learn": [{"icon": "📦", "h": ["Variable", "Variable"], "t": ["A variable has a name and a value. name = \"Mali\" stores Mali in the box called name.", "Variable ມີຊື່ ແລະ ຄ່າ. name = \"Mali\" ເກັບ Mali ໄວ້ໃນກ່ອງຊື່ name."], "a": "t4l0"}, {"icon": "⬅️", "h": ["= stores", "= ໝາຍເຖິງເກັບ"], "t": ["= means store this in the box. A new value replaces the old one.", "= ໝາຍເຖິງເກັບສິ່ງນີ້ໄວ້ໃນກ່ອງ. ຄ່າໃໝ່ແທນທີ່ຄ່າເກົ່າ."], "code": "x = 5\nx = 9      # x is now 9", "a": "t4l1"}, {"icon": "⌨️", "h": ["input()", "input()"], "t": ["input() asks a question, waits for the user, and gives back what they typed.", "input() ຖາມຄຳຖາມ, ລໍຖ້າຜູ້ໃຊ້, ແລະ ສົ່ງຄືນສິ່ງທີ່ເຂົາພິມ."], "code": "name = input(\"What is your name? \")", "a": "t4l2"}, {"icon": "✨", "h": ["f-strings", "f-string"], "t": ["An f-string puts a variable's value inside text. Don't forget the f.", "f-string ເອົາຄ່າຂອງ variable ໃສ່ໃນຂໍ້ຄວາມ. ຢ່າລືມ f."], "code": "print(f\"Hi {name}! I like {food} too.\")", "a": "t4l3"}, {"icon": "🏷️", "h": ["Good variable names", "ຊື່ variable ທີ່ດີ"], "t": ["Say what is inside, like jump_distance. No spaces, no symbols, and don't start with a number.", "ບອກວ່າມີຫຍັງຢູ່ພາຍໃນ, ເຊັ່ນ jump_distance. ບໍ່ມີຍະຫວ່າງ, ບໍ່ມີສັນຍາລັກ, ແລະ ບໍ່ເລີ່ມດ້ວຍຕົວເລກ."], "a": "t4l4"}], "tryit": {"type": "greet", "h": ["Run the greeting bot", "ແລ່ນ greeting bot"], "t": ["Fill in both boxes and press Run. Then change the name and run it again. Watch the value in the box change.", "ຕື່ມທັງສອງຊ່ອງ ແລ້ວກົດ Run. ແລ້ວປ່ຽນຊື່ ແລະ ແລ່ນອີກ. ເບິ່ງຄ່າໃນກ່ອງປ່ຽນ."], "a": "t4t"}, "check": [{"q": ["Which variable name is NOT allowed?", "ຊື່ variable ໃດທີ່ບໍ່ອະນຸຍາດ?"], "o": [["2nd_place", ""], ["rizz_level", ""], ["boba_count", ""], ["jump_distance", ""]], "why": ["A variable name can't start with a number.", "ຊື່ variable ບໍ່ສາມາດເລີ່ມດ້ວຍຕົວເລກ."], "a": "t4q0"}, {"q": ["x = 5, then x = 9. What is in x now?", "x = 5, ແລ້ວ x = 9. ຕອນນີ້ x ມີຫຍັງ?"], "o": [["9", ""], ["5", ""], ["14", ""], ["59", ""]], "why": ["The new value replaces the old one.", "ຄ່າໃໝ່ແທນທີ່ຄ່າເກົ່າ."], "a": "t4q1"}, {"q": ["name is \"Nok\". What does print(\"Hi {name}\") show?", "name ແມ່ນ \"Nok\". print(\"Hi {name}\") ສະແດງຫຍັງ?"], "o": [["Hi {name}", ""], ["Hi Nok", ""], ["Hi name", ""], ["An error", "Error"]], "why": ["Without the f, Python prints the braces as they are.", "ຖ້າບໍ່ມີ f, Python print ວົງເລັບຕາມເດີມ."], "a": "t4q2"}, {"q": ["What does input() do?", "input() ເຮັດຫຍັງ?"], "o": [["Asks the user and gives back what they type", "ຖາມຜູ້ໃຊ້ ແລະ ສົ່ງຄືນສິ່ງທີ່ເຂົາພິມ"], ["Prints text only", "Print ຂໍ້ຄວາມເທົ່ານັ້ນ"], ["Saves the file", "ບັນທຶກໄຟລ໌"], ["Deletes a variable", "ລຶບ variable"]], "why": ["input() waits for the user to type, then gives you their text.", "input() ລໍຖ້າຜູ້ໃຊ້ພິມ, ແລ້ວໃຫ້ຂໍ້ຄວາມຂອງເຂົາແກ່ເຈົ້າ."], "a": "t4q3"}], "big_a": "t4b"}, {"id": 5, "short": "Data types", "colour": "#a8627a", "title": ["Numbers and data types", "ຕົວເລກ ແລະ ປະເພດຂໍ້ມູນ"], "big": ["input() always gives you text. To do maths, change it into a number with int().", "input() ໃຫ້ຂໍ້ຄວາມສະເໝີ. ເພື່ອຄິດໄລ່, ໃຫ້ປ່ຽນມັນເປັນຕົວເລກດ້ວຍ int()."], "learn": [{"icon": "🔢", "h": ["int", "int"], "t": ["An int is a whole number, like 12, 0 or -3.", "int ແມ່ນຈຳນວນເຕັມ, ເຊັ່ນ 12, 0 ຫຼື -3."], "a": "t5l0"}, {"icon": "💧", "h": ["float", "float"], "t": ["A float has a decimal point, like 4.5 or 1.55.", "float ມີຈຸດທົດສະນິຍົມ, ເຊັ່ນ 4.5 ຫຼື 1.55."], "a": "t5l1"}, {"icon": "🔤", "h": ["str", "str"], "t": ["A str (string) is text in quotes, like \"Soulisok\" or \"67\".", "str (string) ແມ່ນຂໍ້ຄວາມໃນວົງຢືມ, ເຊັ່ນ \"Soulisok\" ຫຼື \"67\"."], "a": "t5l2"}, {"icon": "⚠️", "h": ["input() gives text", "input() ໃຫ້ຂໍ້ຄວາມ"], "t": ["If the user types 10 and 5, adding them as text gives 105. Use int() to get real maths.", "ຖ້າຜູ້ໃຊ້ພິມ 10 ແລະ 5, ບວກເປັນຂໍ້ຄວາມໄດ້ 105. ໃຊ້ int() ເພື່ອຄິດໄລ່ແທ້."], "code": "a = input(\"Number: \")       # user types 10\nb = input(\"Number: \")       # user types 5\nprint(a + b)                # 105\nprint(int(a) + int(b))      # 15", "a": "t5l3"}, {"icon": "➗", "h": ["Maths operators", "ເຄື່ອງໝາຍຄິດໄລ່"], "t": ["+ add, - subtract, * multiply, / divide. / always gives a float, so 36 / 3 is 12.0.", "+ ບວກ, - ລົບ, * ຄູນ, / ຫານ. / ໃຫ້ float ສະເໝີ, ສະນັ້ນ 36 / 3 ແມ່ນ 12.0."], "code": "total = 12 + 15 + 9\naverage = total / 3\nprint(f\"Average: {average}\")   # 12.0", "a": "t5l4"}], "tryit": {"type": "sort", "h": ["Sort the values", "ຈັດກຸ່ມຄ່າ"], "t": ["Tap a value, then tap its data type.", "ແຕະຄ່າ, ແລ້ວແຕະປະເພດຂໍ້ມູນຂອງມັນ."], "boxes": [["int", "int"], ["float", "float"], ["str", "str"]], "cards": [[["12", "12"], 0], [["-3", "-3"], 0], [["0", "0"], 0], [["4.5", "4.5"], 1], [["1.55", "1.55"], 1], [["\"Soulisok\"", "\"Soulisok\""], 2], [["\"67\"", "\"67\""], 2], [["\"4.5\"", "\"4.5\""], 2]], "a": "t5t"}, "check": [{"q": ["What type is 4.5? And what type is \"4.5\"?", "4.5 ແມ່ນປະເພດໃດ? ແລະ \"4.5\" ແມ່ນປະເພດໃດ?"], "o": [["float, then str", ""], ["int, then str", ""], ["float, then float", ""], ["str, then float", ""]], "why": ["4.5 has a decimal point. With quotes it becomes text.", "4.5 ມີຈຸດທົດສະນິຍົມ. ມີວົງຢືມ ມັນກາຍເປັນຂໍ້ຄວາມ."], "a": "t5q0"}, {"q": ["The user types 10 and 5. What does print(a + b) show?", "ຜູ້ໃຊ້ພິມ 10 ແລະ 5. print(a + b) ສະແດງຫຍັງ?"], "o": [["105", ""], ["15", ""], ["10 + 5", ""], ["An error", "Error"]], "why": ["input() gives text, so + joins 10 and 5.", "input() ໃຫ້ຂໍ້ຄວາມ, ສະນັ້ນ + ຕໍ່ 10 ແລະ 5."], "a": "t5q1"}, {"q": ["How do you fix age = input(\"Age? \") so you can do maths?", "ແກ້ age = input(\"Age? \") ແນວໃດ ເພື່ອຄິດໄລ່ໄດ້?"], "o": [["age = int(input(\"Age? \"))", ""], ["age = input(int(\"Age? \"))", ""], ["age = \"input(Age?)\"", ""], ["int age = input(\"Age? \")", ""]], "why": ["Put int( ) around input() to turn the text into a whole number.", "ໃສ່ int( ) ອ້ອມ input() ເພື່ອປ່ຽນຂໍ້ຄວາມເປັນຈຳນວນເຕັມ."], "a": "t5q2"}, {"q": ["What is 36 / 3 in Python?", "36 / 3 ໃນ Python ແມ່ນເທົ່າໃດ?"], "o": [["12.0", ""], ["12", ""], ["363", ""], ["An error", "Error"]], "why": ["/ always gives a float.", "/ ໃຫ້ float ສະເໝີ."], "a": "t5q3"}], "big_a": "t5b"}, {"id": 6, "short": "if / elif / else", "colour": "#5e8a5a", "title": ["Selection: if, elif, else", "Selection: if, elif, else"], "big": ["Selection lets a program choose. Python checks from the top and runs only the first branch that is true.", "Selection ເຮັດໃຫ້ໂປຣແກຣມເລືອກໄດ້. Python ກວດຈາກເທິງ ແລະ ແລ່ນແຕ່ branch ທຳອິດທີ່ເປັນຈິງ."], "learn": [{"icon": "🚦", "h": ["if, elif, else", "if, elif, else"], "t": ["if starts the check. elif means else if. else catches everything left.", "if ເລີ່ມການກວດ. elif ໝາຍເຖິງ else if. else ຮັບທຸກຢ່າງທີ່ເຫຼືອ."], "code": "temp = int(input(\"Temperature? \"))\nif temp >= 35:\n    print(\"Very hot. Drink water!\")\nelif temp >= 25:\n    print(\"Warm day.\")\nelse:\n    print(\"Cool day.\")", "a": "t6l0"}, {"icon": "⚖️", "h": ["Comparison operators", "ເຄື່ອງໝາຍປຽບທຽບ"], "t": ["== equal, != not equal, > greater, < less, >= greater or equal, <= less or equal.", "== ເທົ່າກັບ, != ບໍ່ເທົ່າກັບ, > ຫຼາຍກວ່າ, < ໜ້ອຍກວ່າ, >= ຫຼາຍກວ່າ ຫຼື ເທົ່າກັບ, <= ໜ້ອຍກວ່າ ຫຼື ເທົ່າກັບ."], "a": "t6l1"}, {"icon": "➡️", "h": ["Colon and indent", "ຈ້ຳສອງເມັດ ແລະ ການຫຍໍ້ໜ້າ"], "t": ["Every if, elif and else line ends with a colon. The lines inside are indented by 4 spaces.", "ທຸກແຖວ if, elif ແລະ else ຈົບດ້ວຍຈ້ຳສອງເມັດ. ແຖວພາຍໃນຫຍໍ້ໜ້າ 4 ຍະຫວ່າງ."], "a": "t6l2"}, {"icon": "1️⃣", "h": ["Only the first true branch", "ແຕ່ branch ທຳອິດທີ່ເປັນຈິງ"], "t": ["If temp is 40, only Very hot runs, even though 40 >= 25 is also true. Order matters.", "ຖ້າ temp ແມ່ນ 40, ແຕ່ Very hot ເທົ່ານັ້ນທີ່ແລ່ນ, ເຖິງວ່າ 40 >= 25 ກໍເປັນຈິງ. ລຳດັບສຳຄັນ."], "a": "t6l3"}, {"icon": "🟰", "h": ["= is not ==", "= ບໍ່ແມ່ນ =="], "t": ["= stores a value. == compares two values. \"Red\" and \"red\" are not equal.", "= ເກັບຄ່າ. == ປຽບທຽບສອງຄ່າ. \"Red\" ແລະ \"red\" ບໍ່ເທົ່າກັນ."], "a": "t6l4"}], "tryit": {"type": "branch", "h": ["Light up every branch", "ເຮັດໃຫ້ທຸກ branch ສະຫວ່າງ"], "t": ["Type a temperature and press Run. Find inputs that reach all three branches.", "ພິມອຸນຫະພູມ ແລ້ວກົດ Run. ຊອກຫາ input ທີ່ໄປຮອດທັງສາມ branch."], "a": "t6t"}, "check": [{"q": ["In the temperature code, the user types 40. What prints?", "ໃນ code ອຸນຫະພູມ, ຜູ້ໃຊ້ພິມ 40. ຈະ print ຫຍັງ?"], "o": [["Very hot. Drink water!", ""], ["Warm day.", ""], ["Both lines", "ທັງສອງແຖວ"], ["Cool day.", ""]], "why": ["Only the first true branch runs.", "ແຕ່ branch ທຳອິດທີ່ເປັນຈິງເທົ່ານັ້ນທີ່ແລ່ນ."], "a": "t6q0"}, {"q": ["The user types 18. What prints?", "ຜູ້ໃຊ້ພິມ 18. ຈະ print ຫຍັງ?"], "o": [["Cool day.", ""], ["Warm day.", ""], ["Very hot. Drink water!", ""], ["Nothing", "ບໍ່ມີຫຍັງ"]], "why": ["18 is not >= 35 and not >= 25, so else runs.", "18 ບໍ່ >= 35 ແລະ ບໍ່ >= 25, ສະນັ້ນ else ແລ່ນ."], "a": "t6q1"}, {"q": ["What is missing? if mood == \"happy\"", "ຂາດຫຍັງ? if mood == \"happy\""], "o": [["A colon at the end", "ຈ້ຳສອງເມັດຢູ່ທ້າຍ"], ["A comma", "ຈຸດ"], ["Brackets", "ວົງເລັບ"], ["An f", "f"]], "why": ["Every if line ends with a colon.", "ທຸກແຖວ if ຈົບດ້ວຍຈ້ຳສອງເມັດ."], "a": "t6q2"}, {"q": ["Which one compares two values?", "ອັນໃດປຽບທຽບສອງຄ່າ?"], "o": [["==", ""], ["=", ""], [":", ""], ["#", ""]], "why": ["== compares. = stores.", "== ປຽບທຽບ. = ເກັບ."], "a": "t6q3"}], "big_a": "t6b"}, {"id": 7, "short": "Errors", "colour": "#9a6b4f", "title": ["Errors and debugging", "Error ແລະ debugging"], "big": ["An error message tells you which line and what went wrong. Read it, fix one thing, then run again.", "ຂໍ້ຄວາມ error ບອກເຈົ້າວ່າແຖວໃດ ແລະ ຜິດຫຍັງ. ອ່ານມັນ, ແກ້ໜຶ່ງຢ່າງ, ແລ້ວແລ່ນອີກ."], "learn": [{"icon": "🧱", "h": ["SyntaxError", "SyntaxError"], "t": ["Python can't read the line: a missing colon, quote or bracket, or = instead of ==.", "Python ອ່ານແຖວບໍ່ໄດ້: ຂາດຈ້ຳສອງເມັດ, ວົງຢືມ ຫຼື ວົງເລັບ, ຫຼື ໃຊ້ = ແທນ ==."], "code": "if x == 5        # missing :", "a": "t7l0"}, {"icon": "↹", "h": ["IndentationError", "IndentationError"], "t": ["A line inside an if is not indented.", "ແຖວພາຍໃນ if ບໍ່ໄດ້ຫຍໍ້ໜ້າ."], "code": "if x > 3:\nprint(\"hi\")      # needs 4 spaces", "a": "t7l1"}, {"icon": "❓", "h": ["NameError", "NameError"], "t": ["Python doesn't know that name. It is often a typo.", "Python ບໍ່ຮູ້ຈັກຊື່ນັ້ນ. ສ່ວນຫຼາຍແມ່ນພິມຜິດ."], "code": "print(nmae)      # should be name", "a": "t7l2"}, {"icon": "🔀", "h": ["TypeError", "TypeError"], "t": ["You mixed types that don't go together, like text and a number.", "ເຈົ້າປົນປະເພດທີ່ບໍ່ເຂົ້າກັນ, ເຊັ່ນ ຂໍ້ຄວາມ ແລະ ຕົວເລກ."], "code": "\"7\" >= 5", "a": "t7l3"}, {"icon": "🚫", "h": ["ValueError", "ValueError"], "t": ["The value can't be changed into a number.", "ຄ່າປ່ຽນເປັນຕົວເລກບໍ່ໄດ້."], "code": "int(\"two\")", "a": "t7l4"}, {"icon": "🐞", "h": ["Syntax error or logic error", "Syntax error ຫຼື logic error"], "t": ["A syntax error stops the program. A logic error runs but gives the wrong answer, so only testing finds it.", "Syntax error ເຮັດໃຫ້ໂປຣແກຣມຢຸດ. Logic error ແລ່ນໄດ້ ແຕ່ໃຫ້ຄຳຕອບຜິດ, ສະນັ້ນມີແຕ່ການທົດສອບທີ່ຊອກພົບມັນ."], "a": "t7l5"}], "tryit": {"type": "sort", "h": ["Match the bug to the error", "ຈັບຄູ່ bug ກັບ error"], "t": ["Tap a line of code, then tap the error it causes.", "ແຕະແຖວ code, ແລ້ວແຕະ error ທີ່ມັນເຮັດໃຫ້ເກີດ."], "boxes": [["SyntaxError", "SyntaxError"], ["IndentationError", "IndentationError"], ["NameError", "NameError"], ["TypeError", "TypeError"], ["ValueError", "ValueError"]], "cards": [[["if x == 5", "if x == 5"], 0], [["if answer = \"10\":", "if answer = \"10\":"], 0], [["if x > 3:  /  print(\"hi\") with no spaces", "if x > 3:  /  print(\"hi\") ບໍ່ມີຍະຫວ່າງ"], 1], [["print(f\"Hi {nmae}\")", "print(f\"Hi {nmae}\")"], 2], [["\"7\" >= 5", "\"7\" >= 5"], 3], [["int(\"two\")", "int(\"two\")"], 4]], "a": "t7t"}, "check": [{"q": ["print(f\"Hi {nmae}\"). Which error?", "print(f\"Hi {nmae}\"). Error ໃດ?"], "o": [["NameError", ""], ["SyntaxError", ""], ["TypeError", ""], ["ValueError", ""]], "why": ["nmae is a typo, so Python doesn't know that name.", "nmae ແມ່ນພິມຜິດ, ສະນັ້ນ Python ບໍ່ຮູ້ຈັກຊື່ນັ້ນ."], "a": "t7q0"}, {"q": ["The program runs but says 10 + 5 = 105. What kind of error is this?", "ໂປຣແກຣມແລ່ນໄດ້ ແຕ່ບອກວ່າ 10 + 5 = 105. ນີ້ແມ່ນ error ແບບໃດ?"], "o": [["A logic error", "Logic error"], ["A syntax error", "Syntax error"], ["A NameError", "NameError"], ["No error", "ບໍ່ມີ error"]], "why": ["It runs, but the answer is wrong. The fix is int().", "ມັນແລ່ນໄດ້, ແຕ່ຄຳຕອບຜິດ. ວິທີແກ້ແມ່ນ int()."], "a": "t7q1"}, {"q": ["What should you read first in an error message?", "ຄວນອ່ານຫຍັງກ່ອນໃນຂໍ້ຄວາມ error?"], "o": [["The line number and the last line", "ເລກແຖວ ແລະ ແຖວສຸດທ້າຍ"], ["Nothing, just delete the code", "ບໍ່ອ່ານ, ລຶບ code ເລີຍ"], ["Only the colour", "ແຕ່ສີເທົ່ານັ້ນ"], ["The file name", "ຊື່ໄຟລ໌"]], "why": ["The line number shows where. The last line says what went wrong.", "ເລກແຖວບອກບ່ອນ. ແຖວສຸດທ້າຍບອກວ່າຜິດຫຍັງ."], "a": "t7q2"}], "big_a": "t7b"}, {"id": 8, "short": "Footprints and locks", "colour": "#4f8a8b", "title": ["Digital footprint and account security", "ຮອຍຕີນດິຈິຕອນ ແລະ ຄວາມປອດໄພບັນຊີ"], "big": ["What you do online leaves a trail that can last forever. Protect your accounts with strong passwords and more than one lock.", "ສິ່ງທີ່ເຈົ້າເຮັດອອນລາຍປະຮອຍທີ່ອາດຢູ່ຕະຫຼອດໄປ. ປົກປ້ອງບັນຊີດ້ວຍລະຫັດຜ່ານທີ່ແຂງແຮງ ແລະ ລັອກຫຼາຍກວ່າໜຶ່ງຊັ້ນ."], "learn": [{"icon": "👣", "h": ["Digital footprint", "ຮອຍຕີນດິຈິຕອນ"], "t": ["Active footprint is what you choose to post. Passive footprint is collected without you posting, like searches and location.", "ຮອຍຕີນແບບ active ແມ່ນສິ່ງທີ່ເຈົ້າເລືອກໂພສ. ຮອຍຕີນແບບ passive ຖືກເກັບໂດຍທີ່ເຈົ້າບໍ່ໄດ້ໂພສ, ເຊັ່ນ ການຄົ້ນຫາ ແລະ ສະຖານທີ່."], "a": "t8l0"}, {"icon": "📸", "h": ["Deleted is not gone", "ລຶບແລ້ວບໍ່ໄດ້ຫາຍໄປ"], "t": ["Screenshots, shares and archives can keep a post after you delete it.", "ພາບໜ້າຈໍ, ການແບ່ງປັນ ແລະ ບ່ອນເກັບຮັກສາ ສາມາດເກັບໂພສໄວ້ຫຼັງຈາກເຈົ້າລຶບ."], "a": "t8l1"}, {"icon": "🍪", "h": ["Cookies and tracking", "Cookie ແລະ ການຕິດຕາມ"], "t": ["A cookie is a small file a website saves to remember what you do. That is why adverts follow you.", "Cookie ແມ່ນໄຟລ໌ນ້ອຍທີ່ເວັບໄຊບັນທຶກ ເພື່ອຈື່ສິ່ງທີ່ເຈົ້າເຮັດ. ນັ້ນແມ່ນເຫດຜົນທີ່ໂຄສະນາຕາມເຈົ້າ."], "a": "t8l2"}, {"icon": "🔐", "h": ["MFA: know, have, are", "MFA: ຮູ້, ມີ, ເປັນ"], "t": ["MFA needs two different proofs: something you know, have or are. A password and a phone code is MFA.", "MFA ຕ້ອງການສອງຫຼັກຖານທີ່ຕ່າງກັນ: ສິ່ງທີ່ເຈົ້າຮູ້, ມີ ຫຼື ເປັນ. ລະຫັດຜ່ານ ແລະ ລະຫັດທາງໂທລະສັບ ແມ່ນ MFA."], "locks": true, "a": "t8l3"}, {"icon": "🎣", "h": ["Phishing", "Phishing"], "t": ["A fake message pretends to be someone you trust, to steal your details. You won a free phone is a classic trick.", "ຂໍ້ຄວາມປອມທຳທ່າເປັນຄົນທີ່ເຈົ້າໄວ້ໃຈ ເພື່ອລັກຂໍ້ມູນ. ເຈົ້າຊະນະໂທລະສັບຟຣີ ແມ່ນການຫຼອກລວງແບບເກົ່າ."], "a": "t8l4"}, {"icon": "🧠", "h": ["Social engineering and brute force", "Social engineering ແລະ brute force"], "t": ["Social engineering tricks a person, not a computer. Brute force tries every password until one works.", "Social engineering ຫຼອກລວງຄົນ, ບໍ່ແມ່ນຄອມພິວເຕີ. Brute force ລອງທຸກລະຫັດຜ່ານຈົນກວ່າອັນໜຶ່ງໃຊ້ໄດ້."], "a": "t8l5"}, {"icon": "🛡️", "h": ["Strong passwords, firewall, encryption", "ລະຫັດຜ່ານແຂງແຮງ, firewall, encryption"], "t": ["Use long passwords, like 3 random words. A firewall blocks unwanted traffic. Encryption scrambles data so only the right person can read it.", "ໃຊ້ລະຫັດຜ່ານຍາວໆ, ເຊັ່ນ 3 ຄຳແບບສຸ່ມ. Firewall ກັນການເຂົ້າທີ່ບໍ່ຕ້ອງການ. Encryption ເຂົ້າລະຫັດຂໍ້ມູນ ເພື່ອໃຫ້ແຕ່ຄົນທີ່ຖືກຕ້ອງອ່ານໄດ້."], "a": "t8l6"}], "tryit": {"type": "post", "h": ["Delete a post, then make a passphrase", "ລຶບໂພສ, ແລ້ວສ້າງ passphrase"], "t": ["First delete the post and see what is left. Then build a practice passphrase.", "ທຳອິດລຶບໂພສ ແລະ ເບິ່ງວ່າຍັງເຫຼືອຫຍັງ. ແລ້ວສ້າງ passphrase ສຳລັບຝຶກ."], "a": "t8t"}, "check": [{"q": ["Why does MFA protect you even if a hacker steals your password?", "ເປັນຫຍັງ MFA ປົກປ້ອງເຈົ້າ ເຖິງວ່າແຮັກເກີລັກລະຫັດຜ່ານໄປ?"], "o": [["They still need the second proof, like the code on your phone", "ເຂົາຍັງຕ້ອງການຫຼັກຖານທີສອງ, ເຊັ່ນ ລະຫັດໃນໂທລະສັບ"], ["MFA deletes the password", "MFA ລຶບລະຫັດຜ່ານ"], ["MFA hides your name", "MFA ເຊື່ອງຊື່ຂອງເຈົ້າ"], ["It doesn't protect you", "ມັນບໍ່ປົກປ້ອງ"]], "why": ["One stolen lock is not enough. They need the second one too.", "ລັອກດຽວທີ່ຖືກລັກບໍ່ພໍ. ເຂົາຕ້ອງການອັນທີສອງນຳ."], "a": "t8q0"}, {"q": ["Fingerprint and password. Which two kinds of proof?", "ລາຍນິ້ວມື ແລະ ລະຫັດຜ່ານ. ຫຼັກຖານສອງແບບໃດ?"], "o": [["Are and know", "ເປັນ ແລະ ຮູ້"], ["Have and know", "ມີ ແລະ ຮູ້"], ["Know and know", "ຮູ້ ແລະ ຮູ້"], ["Have and are", "ມີ ແລະ ເປັນ"]], "why": ["A fingerprint is something you are. A password is something you know.", "ລາຍນິ້ວມືແມ່ນສິ່ງທີ່ເຈົ້າເປັນ. ລະຫັດຜ່ານແມ່ນສິ່ງທີ່ເຈົ້າຮູ້."], "a": "t8q1"}, {"q": ["A website remembers your searches. Active or passive footprint?", "ເວັບໄຊຈື່ການຄົ້ນຫາຂອງເຈົ້າ. ຮອຍຕີນ active ຫຼື passive?"], "o": [["Passive", "Passive"], ["Active", "Active"], ["Neither", "ບໍ່ແມ່ນທັງສອງ"], ["Both", "ທັງສອງ"]], "why": ["It was collected without you posting anything.", "ມັນຖືກເກັບໂດຍທີ່ເຈົ້າບໍ່ໄດ້ໂພສຫຍັງ."], "a": "t8q2"}, {"q": ["A password plus a security question. Is that MFA?", "ລະຫັດຜ່ານ ກັບ ຄຳຖາມຄວາມປອດໄພ. ນັ້ນແມ່ນ MFA ບໍ?"], "o": [["No, both are things you know", "ບໍ່, ທັງສອງແມ່ນສິ່ງທີ່ເຈົ້າຮູ້"], ["Yes, it has two steps", "ແມ່ນ, ມັນມີສອງຂັ້ນຕອນ"], ["Yes, always", "ແມ່ນ, ສະເໝີ"], ["Only on phones", "ແຕ່ໃນໂທລະສັບ"]], "why": ["MFA needs two different kinds of proof.", "MFA ຕ້ອງການຫຼັກຖານສອງແບບທີ່ຕ່າງກັນ."], "a": "t8q3"}], "big_a": "t8b"}, {"id": 9, "short": "Design brief", "colour": "#546a8c", "title": ["Design project: brief to plan", "ໂຄງການອອກແບບ: ຈາກ brief ຫາແຜນ"], "big": ["A design project starts with a brief and real users. Find out what they need, then plan with pseudocode and a flowchart before you code.", "ໂຄງການອອກແບບເລີ່ມດ້ວຍ brief ແລະ ຜູ້ໃຊ້ແທ້. ຊອກຮູ້ວ່າເຂົາຕ້ອງການຫຍັງ, ແລ້ວວາງແຜນດ້ວຍ pseudocode ແລະ flowchart ກ່ອນຂຽນ code."], "learn": [{"icon": "📋", "h": ["The design brief", "Design brief"], "t": ["The brief is the job. Ours: a helpful text program for new GIS pupils, as a quiz, a phrase translator or an info-bot.", "Brief ແມ່ນວຽກທີ່ຕ້ອງເຮັດ. ຂອງພວກເຮົາ: ໂປຣແກຣມຂໍ້ຄວາມທີ່ຊ່ວຍນັກຮຽນໃໝ່ GIS, ເປັນ quiz, ໂປຣແກຣມແປພາສາ ຫຼື info-bot."], "a": "t9l0"}, {"icon": "🎯", "h": ["Purpose and requirements", "ຈຸດປະສົງ ແລະ ສິ່ງທີ່ຕ້ອງມີ"], "t": ["Purpose is why it exists and who it helps. Requirements are what it must do.", "ຈຸດປະສົງແມ່ນເປັນຫຍັງຈຶ່ງມີມັນ ແລະ ມັນຊ່ວຍໃຜ. ສິ່ງທີ່ຕ້ອງມີແມ່ນສິ່ງທີ່ມັນຕ້ອງເຮັດ."], "a": "t9l1"}, {"icon": "📊", "h": ["Survey the users", "ສອບຖາມຜູ້ໃຊ້"], "t": ["We asked 3 real users what they need, so the requirements come from them.", "ພວກເຮົາຖາມຜູ້ໃຊ້ແທ້ 3 ຄົນວ່າເຂົາຕ້ອງການຫຍັງ, ສະນັ້ນສິ່ງທີ່ຕ້ອງມີມາຈາກເຂົາ."], "a": "t9l2"}, {"icon": "⚖️", "h": ["Competing considerations", "ສິ່ງທີ່ຕ້ອງຊັ່ງນໍ້າໜັກ"], "t": ["Two good things can pull against each other. More questions teach more, but take longer. You choose: a trade-off.", "ສອງສິ່ງທີ່ດີອາດຂັດກັນ. ຄຳຖາມຫຼາຍສອນໄດ້ຫຼາຍ, ແຕ່ໃຊ້ເວລາດົນ. ເຈົ້າເລືອກ: trade-off."], "a": "t9l3"}, {"icon": "✅", "h": ["Criteria and milestones", "ເກນ ແລະ ຈຸດໝາຍ"], "t": ["Criteria are the checklist to judge the program. Milestones are checkpoints: design, build, test, finish.", "ເກນແມ່ນລາຍການກວດເພື່ອຕັດສິນໂປຣແກຣມ. ຈຸດໝາຍແມ່ນຈຸດກວດ: ອອກແບບ, ສ້າງ, ທົດສອບ, ສຳເລັດ."], "a": "t9l4"}], "tryit": {"type": "order", "h": ["Put the design steps in order", "ຮຽງຂັ້ນຕອນການອອກແບບ"], "t": ["Tap the steps in the order you do them.", "ແຕະຂັ້ນຕອນຕາມລຳດັບທີ່ເຈົ້າເຮັດ."], "items": [["Read the brief", "ອ່ານ brief"], ["Survey 3 users", "ສອບຖາມຜູ້ໃຊ້ 3 ຄົນ"], ["Write the requirements", "ຂຽນສິ່ງທີ່ຕ້ອງມີ"], ["Plan with pseudocode and a flowchart", "ວາງແຜນດ້ວຍ pseudocode ແລະ flowchart"], ["Build it in Thonny", "ສ້າງມັນໃນ Thonny"], ["Test every branch", "ທົດສອບທຸກ branch"], ["Evaluate against the criteria", "ປະເມີນກັບເກນ"]], "a": "t9t"}, "check": [{"q": ["Why do we survey users before coding?", "ເປັນຫຍັງຕ້ອງສອບຖາມຜູ້ໃຊ້ກ່ອນຂຽນ code?"], "o": [["To find what they really need", "ເພື່ອຮູ້ວ່າເຂົາຕ້ອງການຫຍັງແທ້"], ["To make the code shorter", "ເພື່ອໃຫ້ code ສັ້ນລົງ"], ["To get their passwords", "ເພື່ອເອົາລະຫັດຜ່ານຂອງເຂົາ"], ["Because Thonny needs it", "ເພາະ Thonny ຕ້ອງການ"]], "why": ["Requirements should come from real users, not guesses.", "ສິ່ງທີ່ຕ້ອງມີຄວນມາຈາກຜູ້ໃຊ້ແທ້, ບໍ່ແມ່ນການເດົາ."], "a": "t9q0"}, {"q": ["More quiz questions teach more, but the quiz takes longer. This is a...", "ຄຳຖາມ quiz ຫຼາຍສອນໄດ້ຫຼາຍ, ແຕ່ quiz ໃຊ້ເວລາດົນ. ນີ້ແມ່ນ..."], "o": [["Trade-off", "Trade-off"], ["Bug", "Bug"], ["Requirement", "ສິ່ງທີ່ຕ້ອງມີ"], ["Milestone", "ຈຸດໝາຍ"]], "why": ["Two good things pull against each other, so you must choose.", "ສອງສິ່ງທີ່ດີຂັດກັນ, ສະນັ້ນເຈົ້າຕ້ອງເລືອກ."], "a": "t9q1"}, {"q": ["What are criteria?", "ເກນແມ່ນຫຍັງ?"], "o": [["The checklist used to judge the program", "ລາຍການກວດທີ່ໃຊ້ຕັດສິນໂປຣແກຣມ"], ["The users", "ຜູ້ໃຊ້"], ["The error messages", "ຂໍ້ຄວາມ error"], ["The file names", "ຊື່ໄຟລ໌"]], "why": ["Criteria tell you how to decide if the program is good.", "ເກນບອກວິທີຕັດສິນວ່າໂປຣແກຣມດີບໍ."], "a": "t9q2"}], "big_a": "t9b"}, {"id": 10, "short": "Build and test", "colour": "#7c7a52", "title": ["Build, test and evaluate", "ສ້າງ, ທົດສອບ ແລະ ປະເມີນ"], "big": ["Turn each pseudocode line into a Python line. Test every branch, save versions, and judge the program against the criteria.", "ປ່ຽນແຕ່ລະແຖວ pseudocode ເປັນແຖວ Python. ທົດສອບທຸກ branch, ບັນທຶກເວີຊັນ, ແລະ ຕັດສິນໂປຣແກຣມກັບເກນ."], "learn": [{"icon": "🔄", "h": ["Pseudocode to Python", "ຈາກ pseudocode ຫາ Python"], "t": ["Each pseudocode line becomes one Python line. END IF has no line: indentation shows where it ends.", "ແຕ່ລະແຖວ pseudocode ກາຍເປັນແຖວ Python ໜຶ່ງແຖວ. END IF ບໍ່ມີແຖວ: ການຫຍໍ້ໜ້າສະແດງບ່ອນຈົບ."], "code": "INPUT topic           ->  topic = input(\"Topic? \")\nIF topic = \"lunch\"    ->  if topic == \"lunch\":\nELSE IF ...           ->  elif ...:\nOUTPUT \"Hi\"           ->  print(\"Hi\")", "lang": "pseudo", "a": "t10l0"}, {"icon": "🧪", "h": ["Test every branch", "ທົດສອບທຸກ branch"], "t": ["Try inputs on purpose to reach every branch. Try unusual ones too, like Lunch with a capital L.", "ລອງ input ໂດຍເຈດຕະນາ ເພື່ອໄປຮອດທຸກ branch. ລອງອັນແປກໆນຳ, ເຊັ່ນ Lunch ທີ່ມີ L ໃຫຍ່."], "a": "t10l1"}, {"icon": "💾", "h": ["Version saving", "ການບັນທຶກເວີຊັນ"], "t": ["Save v1, v2, v3. If a new change breaks the program, go back to the version that worked.", "ບັນທຶກ v1, v2, v3. ຖ້າການປ່ຽນແປງໃໝ່ເຮັດໃຫ້ໂປຣແກຣມເສຍ, ກັບໄປຫາເວີຊັນທີ່ໃຊ້ໄດ້."], "a": "t10l2"}, {"icon": "🗒️", "h": ["Comments with technical words", "Comment ດ້ວຍຄຳສັບເຕັກນິກ"], "t": ["Explain each part with # comments, like # selection: check the topic.", "ອະທິບາຍແຕ່ລະສ່ວນດ້ວຍ # comment, ເຊັ່ນ # selection: check the topic."], "a": "t10l3"}, {"icon": "⭐", "h": ["Evaluate and peer feedback", "ປະເມີນ ແລະ ຄຳຕິຊົມຈາກໝູ່"], "t": ["Judge your program against the criteria: what works, the trade-offs, what to do next. Classmates give one strength and one thing to improve.", "ຕັດສິນໂປຣແກຣມກັບເກນ: ອັນໃດໃຊ້ໄດ້, trade-off, ຈະເຮັດຫຍັງຕໍ່. ໝູ່ໃຫ້ຈຸດແຂງໜຶ່ງຢ່າງ ແລະ ສິ່ງທີ່ຄວນປັບປຸງໜຶ່ງຢ່າງ."], "a": "t10l4"}], "tryit": {"type": "testtable", "h": ["Test the GIS Helper", "ທົດສອບ GIS Helper"], "t": ["Type a topic and press Run test. Tick every row of the test table, including one unusual input.", "ພິມຫົວຂໍ້ ແລ້ວກົດ Run test. ໝາຍທຸກແຖວຂອງຕາຕະລາງທົດສອບ, ລວມທັງ input ແປກໆໜຶ່ງອັນ."], "a": "t10t"}, "check": [{"q": ["Your info-bot has 3 topics plus an else. How many tests do you need at least?", "Info-bot ຂອງເຈົ້າມີ 3 ຫົວຂໍ້ ແລະ else. ຕ້ອງທົດສອບຢ່າງໜ້ອຍຈັກເທື່ອ?"], "o": [["4", ""], ["1", ""], ["3", ""], ["10", ""]], "why": ["One for each topic, and one to reach the else.", "ໜຶ່ງເທື່ອສຳລັບແຕ່ລະຫົວຂໍ້, ແລະ ໜຶ່ງເທື່ອເພື່ອໄປຮອດ else."], "a": "t10q0"}, {"q": ["Why save v1 before adding a new feature?", "ເປັນຫຍັງຕ້ອງບັນທຶກ v1 ກ່ອນເພີ່ມສິ່ງໃໝ່?"], "o": [["So you can go back if the new feature breaks it", "ເພື່ອກັບໄປໄດ້ຖ້າສິ່ງໃໝ່ເຮັດໃຫ້ມັນເສຍ"], ["To make it run faster", "ເພື່ອໃຫ້ແລ່ນໄວຂຶ້ນ"], ["To delete the bugs", "ເພື່ອລຶບ bug"], ["Because Python needs two files", "ເພາະ Python ຕ້ອງການສອງໄຟລ໌"]], "why": ["The saved version still works if the new one breaks.", "ເວີຊັນທີ່ບັນທຶກໄວ້ຍັງໃຊ້ໄດ້ ຖ້າອັນໃໝ່ເສຍ."], "a": "t10q1"}, {"q": ["Which Python line matches IF topic = \"lunch\" THEN?", "ແຖວ Python ໃດກົງກັບ IF topic = \"lunch\" THEN?"], "o": [["if topic == \"lunch\":", ""], ["if topic = \"lunch\" then", ""], ["IF topic == lunch", ""], ["if (topic) \"lunch\":", ""]], "why": ["Use if, ==, quotes around the text, and a colon.", "ໃຊ້ if, ==, ວົງຢືມອ້ອມຂໍ້ຄວາມ, ແລະ ຈ້ຳສອງເມັດ."], "a": "t10q2"}], "big_a": "t10b"}], "flash": [{"t": 1, "f": ["Decomposition", "Decomposition"], "b": ["Breaking a big problem into smaller parts.", "ແບ່ງບັນຫາໃຫຍ່ອອກເປັນສ່ວນນ້ອຍ."], "a": "f0"}, {"t": 1, "f": ["Pattern recognition", "Pattern recognition"], "b": ["Spotting what is the same or repeats.", "ຊອກຫາສິ່ງທີ່ຄືກັນ ຫຼື ຊ້ຳກັນ."], "a": "f1"}, {"t": 1, "f": ["Abstraction", "Abstraction"], "b": ["Keeping the important details and hiding the rest.", "ເກັບລາຍລະອຽດທີ່ສຳຄັນ ແລະ ເຊື່ອງສ່ວນທີ່ເຫຼືອ."], "a": "f2"}, {"t": 1, "f": ["Algorithm", "Algorithm"], "b": ["Step-by-step instructions to solve a problem.", "ຄຳແນະນຳເທື່ອລະຂັ້ນຕອນ ເພື່ອແກ້ບັນຫາ."], "a": "f3"}, {"t": 2, "f": ["Pseudocode", "Pseudocode"], "b": ["A plan in simple steps: INPUT, OUTPUT, IF, ELSE.", "ແຜນເປັນຂັ້ນຕອນງ່າຍໆ: INPUT, OUTPUT, IF, ELSE."], "a": "f4"}, {"t": 2, "f": ["Diamond", "ຮູບເພັດ"], "b": ["A decision with Yes and No arrows.", "ການຕັດສິນໃຈ ທີ່ມີລູກສອນ ແມ່ນ ແລະ ບໍ່."], "a": "f5"}, {"t": 2, "f": ["Parallelogram", "ຮູບສີ່ແຈຂ້າງຂະໜານ"], "b": ["Input or output.", "Input ຫຼື output."], "a": "f6"}, {"t": 2, "f": ["Sequence, selection, iteration", "Sequence, selection, iteration"], "b": ["In order, choose, repeat.", "ຕາມລຳດັບ, ເລືອກ, ເຮັດຊ້ຳ."], "a": "f7"}, {"t": 2, "f": ["Trace table", "Trace table"], "b": ["A table of each variable's value after each step.", "ຕາຕະລາງຄ່າຂອງແຕ່ລະ variable ຫຼັງແຕ່ລະຂັ້ນຕອນ."], "a": "f8"}, {"t": 3, "f": ["Shell", "Shell"], "b": ["Where Thonny shows output and errors.", "ບ່ອນທີ່ Thonny ສະແດງ output ແລະ error."], "a": "f9"}, {"t": 3, "f": ["String", "String"], "b": ["Text inside quotes.", "ຂໍ້ຄວາມໃນວົງຢືມ."], "a": "f10"}, {"t": 3, "f": ["Comment", "Comment"], "b": ["A note starting with #. Python skips it.", "ບັນທຶກທີ່ເລີ່ມດ້ວຍ #. Python ຂ້າມມັນ."], "a": "f11"}, {"t": 3, "f": ["Case-sensitive", "Case-sensitive"], "b": ["print works, Print does not.", "print ໃຊ້ໄດ້, Print ໃຊ້ບໍ່ໄດ້."], "a": "f12"}, {"t": 4, "f": ["Variable", "Variable"], "b": ["A named box that stores a value.", "ກ່ອງທີ່ມີຊື່ ທີ່ເກັບຄ່າ."], "a": "f13"}, {"t": 4, "f": ["input()", "input()"], "b": ["Asks the user and gives back their text.", "ຖາມຜູ້ໃຊ້ ແລະ ສົ່ງຄືນຂໍ້ຄວາມຂອງເຂົາ."], "a": "f14"}, {"t": 4, "f": ["f-string", "f-string"], "b": ["f\"Hi {name}\" puts a value into text.", "f\"Hi {name}\" ເອົາຄ່າໃສ່ໃນຂໍ້ຄວາມ."], "a": "f15"}, {"t": 4, "f": ["= and ==", "= ແລະ =="], "b": ["= stores. == compares.", "= ເກັບ. == ປຽບທຽບ."], "a": "f16"}, {"t": 5, "f": ["int", "int"], "b": ["A whole number, like 12.", "ຈຳນວນເຕັມ, ເຊັ່ນ 12."], "a": "f17"}, {"t": 5, "f": ["float", "float"], "b": ["A number with a decimal point, like 4.5.", "ຕົວເລກທີ່ມີຈຸດທົດສະນິຍົມ, ເຊັ່ນ 4.5."], "a": "f18"}, {"t": 5, "f": ["str", "str"], "b": ["Text, like \"67\".", "ຂໍ້ຄວາມ, ເຊັ່ນ \"67\"."], "a": "f19"}, {"t": 5, "f": ["int()", "int()"], "b": ["Changes text into a whole number: int(\"12\") gives 12.", "ປ່ຽນຂໍ້ຄວາມເປັນຈຳນວນເຕັມ: int(\"12\") ໄດ້ 12."], "a": "f20"}, {"t": 6, "f": ["if", "if"], "b": ["Runs its lines only when the condition is true.", "ແລ່ນແຖວຂອງມັນ ສະເພາະເມື່ອເງື່ອນໄຂເປັນຈິງ."], "a": "f21"}, {"t": 6, "f": ["elif", "elif"], "b": ["Else if: the next check.", "Else if: ການກວດຕໍ່ໄປ."], "a": "f22"}, {"t": 6, "f": ["else", "else"], "b": ["Runs when nothing above was true.", "ແລ່ນເມື່ອບໍ່ມີອັນໃດຂ້າງເທິງເປັນຈິງ."], "a": "f23"}, {"t": 6, "f": ["Colon and indent", "ຈ້ຳສອງເມັດ ແລະ ຫຍໍ້ໜ້າ"], "b": ["End if lines with : and indent inside by 4 spaces.", "ຈົບແຖວ if ດ້ວຍ : ແລະ ຫຍໍ້ໜ້າພາຍໃນ 4 ຍະຫວ່າງ."], "a": "f24"}, {"t": 7, "f": ["SyntaxError", "SyntaxError"], "b": ["Python can't read the line.", "Python ອ່ານແຖວບໍ່ໄດ້."], "a": "f25"}, {"t": 7, "f": ["IndentationError", "IndentationError"], "b": ["A line inside an if is not indented.", "ແຖວພາຍໃນ if ບໍ່ໄດ້ຫຍໍ້ໜ້າ."], "a": "f26"}, {"t": 7, "f": ["NameError", "NameError"], "b": ["Python doesn't know that name. Often a typo.", "Python ບໍ່ຮູ້ຈັກຊື່ນັ້ນ. ສ່ວນຫຼາຍແມ່ນພິມຜິດ."], "a": "f27"}, {"t": 7, "f": ["TypeError", "TypeError"], "b": ["Mixing types, like \"7\" >= 5.", "ປົນປະເພດ, ເຊັ່ນ \"7\" >= 5."], "a": "f28"}, {"t": 7, "f": ["ValueError", "ValueError"], "b": ["A value can't be changed, like int(\"two\").", "ຄ່າປ່ຽນບໍ່ໄດ້, ເຊັ່ນ int(\"two\")."], "a": "f29"}, {"t": 7, "f": ["Logic error", "Logic error"], "b": ["It runs but gives the wrong answer.", "ມັນແລ່ນໄດ້ ແຕ່ໃຫ້ຄຳຕອບຜິດ."], "a": "f30"}, {"t": 8, "f": ["Digital footprint", "ຮອຍຕີນດິຈິຕອນ"], "b": ["The trail of data you leave online.", "ຮອຍຂໍ້ມູນທີ່ເຈົ້າປະໄວ້ອອນລາຍ."], "a": "f31"}, {"t": 8, "f": ["Passive footprint", "ຮອຍຕີນ passive"], "b": ["Data collected without you posting.", "ຂໍ້ມູນທີ່ຖືກເກັບໂດຍເຈົ້າບໍ່ໄດ້ໂພສ."], "a": "f32"}, {"t": 8, "f": ["MFA", "MFA"], "b": ["Two different proofs: know, have, are.", "ສອງຫຼັກຖານທີ່ຕ່າງກັນ: ຮູ້, ມີ, ເປັນ."], "a": "f33"}, {"t": 8, "f": ["Phishing", "Phishing"], "b": ["A fake message that tries to steal your details.", "ຂໍ້ຄວາມປອມທີ່ພະຍາຍາມລັກຂໍ້ມູນຂອງເຈົ້າ."], "a": "f34"}, {"t": 8, "f": ["Brute force", "Brute force"], "b": ["Trying every password until one works.", "ລອງທຸກລະຫັດຜ່ານຈົນກວ່າອັນໜຶ່ງໃຊ້ໄດ້."], "a": "f35"}, {"t": 9, "f": ["Design brief", "Design brief"], "b": ["The task you are given.", "ວຽກທີ່ເຈົ້າໄດ້ຮັບ."], "a": "f36"}, {"t": 9, "f": ["Requirements", "ສິ່ງທີ່ຕ້ອງມີ"], "b": ["What the program must do, from the users.", "ສິ່ງທີ່ໂປຣແກຣມຕ້ອງເຮັດ, ຈາກຜູ້ໃຊ້."], "a": "f37"}, {"t": 9, "f": ["Trade-off", "Trade-off"], "b": ["Choosing between two good things.", "ການເລືອກລະຫວ່າງສອງສິ່ງທີ່ດີ."], "a": "f38"}, {"t": 9, "f": ["Criteria", "ເກນ"], "b": ["The checklist to judge a solution.", "ລາຍການກວດເພື່ອຕັດສິນວິທີແກ້."], "a": "f39"}, {"t": 10, "f": ["Testing", "ການທົດສອບ"], "b": ["Trying inputs on purpose to reach every branch.", "ລອງ input ໂດຍເຈດຕະນາ ເພື່ອໄປຮອດທຸກ branch."], "a": "f40"}, {"t": 10, "f": ["Version saving", "ການບັນທຶກເວີຊັນ"], "b": ["Saving v1, v2, v3 so you can go back.", "ບັນທຶກ v1, v2, v3 ເພື່ອກັບໄປໄດ້."], "a": "f41"}, {"t": 10, "f": ["Evaluate", "ປະເມີນ"], "b": ["Judge the program against the criteria.", "ຕັດສິນໂປຣແກຣມກັບເກນ."], "a": "f42"}]};
+const T=DATA.topics, FLASH=DATA.flash;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const store={get(k,d){try{const v=localStorage.getItem('y7t1_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+             set(k,v){try{localStorage.setItem('y7t1_'+k,JSON.stringify(v))}catch(e){}}};
+const S=store.get('state',{stars:{},done:{}});
+const save=()=>store.set('state',S);
+const stars=n=>S.stars[n]||(S.stars[n]={l:0,t:0,c:0});
+const totalStars=()=>T.reduce((a,t)=>{const s=stars(t.id);return a+s.l+s.t+s.c},0);
+const L=(pair,tag='span')=>`${esc(pair[0])}${pair[1]&&pair[1]!==pair[0]?`<${tag} class="lo" lang="lo">${esc(pair[1])}</${tag}>`:''}`;
+const LB=(pair)=>`${esc(pair[0])}${pair[1]&&pair[1]!==pair[0]?`<span class="lo" lang="lo">${esc(pair[1])}</span>`:''}`;
+const UI={
+ next:["Next up","ຕໍ່ໄປ"],done:["Done","ສຳເລັດ"],big:["Big idea","ແນວຄິດຫຼັກ"],learn:["Learn","ຮຽນ"],tryit:["Try it","ລອງເຮັດ"],check:["Check","ກວດ"],
+ again:["Have another go.","ລອງອີກເທື່ອໜຶ່ງ."],right:["Correct.","ຖືກຕ້ອງ."],answer:["The answer is:","ຄຳຕອບແມ່ນ:"],
+};
+const ui=k=>`${UI[k][0]}<span class="lo" lang="lo">${UI[k][1]}</span>`;
+function hexA(h,a){const n=parseInt(h.slice(1),16);return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`}
+function tvars(t){return `--tc:${t.colour};--tcl:${hexA(t.colour,.13)}`}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+/* ---------- settings ---------- */
+function applySettings(){
+  const sz=store.get('size',0),lg=store.get('lang','en');
+  document.documentElement.className=sz?'s'+sz:'';
+  document.body.classList.toggle('lao',lg==='lo');
+  $$('[data-size]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.size===sz));
+  $$('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===lg));
+}
+$$('[data-size]').forEach(b=>b.onclick=()=>{store.set('size',+b.dataset.size);applySettings()});
+$$('[data-lang]').forEach(b=>b.onclick=()=>{store.set('lang',b.dataset.lang);applySettings()});
+applySettings();
+
+/* ---------- audio ---------- */
+const audio=new Audio();let cur=null;
+function stopA(){audio.pause();if(cur)cur.setAttribute('aria-pressed','false');cur=null}
+audio.onended=stopA;audio.onerror=stopA;
+document.addEventListener('click',e=>{const b=e.target.closest('.say');if(!b)return;
+  if(cur===b){stopA();return}stopA();audio.src=`audio/${b.dataset.l}/${b.dataset.a}.mp3`;
+  audio.play().then(()=>{cur=b;b.setAttribute('aria-pressed','true')}).catch(()=>{})});
+const says=id=>`<span class="says"><button class="say" data-a="${id}" data-l="en" aria-pressed="false">🔊 English</button><button class="say" data-a="${id}" data-l="lo" aria-pressed="false">🔊 ລາວ</button></span>`;
+
+/* ---------- code colouring ---------- */
+function hl(src,lang){
+  if(lang==='pseudo')return esc(src).replace(/\b(INPUT|OUTPUT|IF|THEN|ELSE IF|ELSE|END IF)\b/g,'<span class="k">$1</span>');
+  return src.split('\n').map(line=>{
+    const re=/(#.*$)|(f?"(?:[^"\\]|\\.)*")|\b(if|elif|else)\b|\b(print|input|int|float)\b|\b(\d+(?:\.\d+)?)\b/g;let o='',i=0,m;
+    while((m=re.exec(line))){o+=esc(line.slice(i,m.index));
+      if(m[1])o+=`<span class="c">${esc(m[1])}</span>`;else if(m[2])o+=`<span class="s">${esc(m[2])}</span>`;
+      else if(m[3])o+=`<span class="k">${m[3]}</span>`;else if(m[4])o+=`<span class="f">${m[4]}</span>`;else o+=`<span class="n">${m[5]}</span>`;i=re.lastIndex}
+    return o+esc(line.slice(i));}).join('\n');
+}
+const SHAPES={
+ oval:'<svg class="shape" width="150" height="54" viewBox="0 0 150 54" aria-hidden="true"><rect x="3" y="3" width="144" height="48" rx="24" fill="var(--tcl)" stroke="var(--tc)" stroke-width="2.5"/><text x="75" y="32" text-anchor="middle" font-size="15" font-weight="700" fill="#272d34">Start</text></svg>',
+ io:'<svg class="shape" width="170" height="54" viewBox="0 0 170 54" aria-hidden="true"><polygon points="22,3 167,3 148,51 3,51" fill="var(--tcl)" stroke="var(--tc)" stroke-width="2.5"/><text x="85" y="32" text-anchor="middle" font-size="15" font-weight="700" fill="#272d34">INPUT age</text></svg>',
+ rect:'<svg class="shape" width="150" height="54" viewBox="0 0 150 54" aria-hidden="true"><rect x="3" y="3" width="144" height="48" rx="4" fill="var(--tcl)" stroke="var(--tc)" stroke-width="2.5"/><text x="75" y="32" text-anchor="middle" font-size="15" font-weight="700" fill="#272d34">total = a + b</text></svg>',
+ diamond:'<svg class="shape" width="170" height="92" viewBox="0 0 170 92" aria-hidden="true"><polygon points="85,3 167,46 85,89 3,46" fill="var(--tcl)" stroke="var(--tc)" stroke-width="2.5"/><text x="85" y="51" text-anchor="middle" font-size="14" font-weight="700" fill="#272d34">age >= 12?</text></svg>'};
+const LOCKS=`<div class="locks"><div><b>🔑</b>Something you know<span class="lo" lang="lo">ສິ່ງທີ່ເຈົ້າຮູ້</span>password, PIN</div><div><b>📱</b>Something you have<span class="lo" lang="lo">ສິ່ງທີ່ເຈົ້າມີ</span>a code on your phone</div><div><b>👆</b>Something you are<span class="lo" lang="lo">ສິ່ງທີ່ເຈົ້າເປັນ</span>fingerprint, face</div></div>`;
+
+/* ---------- router ---------- */
+const view=$('#view');
+function route(){
+  stopA();
+  const h=location.hash.replace(/^#\/?/,'').split('/');
+  $$('nav.main a').forEach(a=>a.toggleAttribute('aria-current',false));
+  if(h[0]==='t'&&T[+h[1]-1]){renderTopic(+h[1],h[2]||null)}
+  else if(h[0]==='cards'){setNav('cards');renderCards()}
+  else if(h[0]==='final'){setNav('final');renderFinal()}
+  else{setNav('map');renderMap()}
+  window.scrollTo(0,0);
+}
+function setNav(k){const a=$(`nav.main a[data-nav="${k}"]`);if(a)a.setAttribute('aria-current','page')}
+window.addEventListener('hashchange',route);
+
+/* ---------- map ---------- */
+function nextTopic(){return T.find(t=>!S.done[t.id])}
+function renderMap(){
+  document.body.style.cssText='';
+  const nt=nextTopic(),tot=totalStars(),max=T.length*3,C=2*Math.PI*44;
+  const primary=nt?`<a class="btn primary" href="#/t/${nt.id}">${S.done[1]||Object.keys(S.done).length?'Continue':'Start'}: ${esc(nt.short)}</a>`
+                  :`<a class="btn primary" href="#/final">Go to the final challenge</a>`;
+  view.innerHTML=`
+  <div class="top"><div class="t">
+    <h1>Year 7 Term 1 Reviewer<span class="lo" lang="lo">ທົບທວນ Year 7 ພາກຮຽນທີ 1</span></h1>
+    <p>Go through the topics in order. In each one: learn it, try it, then check it.<span class="lo" lang="lo">ເຮັດຕາມຫົວຂໍ້ຕາມລຳດັບ. ໃນແຕ່ລະຫົວຂໍ້: ຮຽນ, ລອງເຮັດ, ແລ້ວກວດ.</span></p>
+    ${primary}</div>
+    <div class="ring" role="img" aria-label="${tot} of ${max} stars"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#dde2e8" stroke-width="9"/><circle cx="50" cy="50" r="44" fill="none" stroke="#b8860b" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-tot/max)}"/></svg><b><span>${tot}</span>of ${max} ★</b></div>
+  </div>
+  <div class="note lo" lang="lo">ຄຳແປພາສາລາວນີ້ເປັນສະບັບຮ່າງ. ຄູທີ່ເວົ້າພາສາລາວຈະກວດຄືນ. (Lao translation is a draft, to be checked by a Lao-speaking teacher.)</div>
+  <h2>Your topics<span class="lo" lang="lo">ຫົວຂໍ້ຂອງເຈົ້າ</span></h2>
+  <div class="tiles">${T.map(t=>{const s=stars(t.id),isNext=nt&&nt.id===t.id;
+    return `<a class="tile${isNext?' next':''}" style="${tvars(t)}" href="#/t/${t.id}"><span class="n">${t.id}</span><span class="body"><b>${esc(t.title[0])}</b><span class="lo" lang="lo">${esc(t.title[1])}</span>
+      <span class="dashes" aria-label="${s.l+s.t+s.c} of 3 stars"><i class="${s.l?'on':''}"></i><i class="${s.t?'on':''}"></i><i class="${s.c?'on':''}"></i></span></span>
+      ${isNext?`<span class="st next">${UI.next[0]}</span>`:S.done[t.id]?`<span class="st done">${UI.done[0]}</span>`:''}</a>`}).join('')}</div>
+  <h2>When you finish<span class="lo" lang="lo">ເມື່ອເຈົ້າເຮັດສຳເລັດ</span></h2>
+  <div class="tiles">
+    <a class="tile" style="${tvars({colour:'#6b7480'})}" href="#/cards"><span class="n">🃏</span><span class="body"><b>Flashcards</b><span class="lo" lang="lo">ບັດຄຳສັບ</span><span class="muted"> ${FLASH.length} cards</span></span></a>
+    <a class="tile" style="${tvars({colour:'#6b7480'})}" href="#/final"><span class="n">🏁</span><span class="body"><b>Final challenge</b><span class="lo" lang="lo">ສິ່ງທ້າທາຍສຸດທ້າຍ</span><span class="muted"> 15 questions${store.get('best',null)!==null?`, best ${store.get('best')} of 15`:''}</span></span></a>
+  </div>`;
+}
+
+/* ---------- topic ---------- */
+function renderTopic(n,step){
+  const t=T[n-1],s=stars(n);
+  document.body.style.cssText=tvars(t);
+  const unlocked={learn:true,try:!!s.l,check:!!s.t};
+  if(!step||!unlocked[step])step=s.t?'check':s.l?'try':'learn';
+  const st=(k,i,label)=>`<li><button data-step="${k}" ${step===k?'aria-current="step"':''} ${unlocked[k]?'':'disabled'}>${i} ${label} <span class="star${s[k[0]]?' on':''}" aria-label="${s[k[0]]?'star earned':'no star yet'}">${s[k[0]]?'★':'☆'}</span></button></li>`;
+  view.innerHTML=`
+   <div class="crumb"><a href="#/map">Map</a> &gt; Topic ${n} of ${T.length}</div>
+   <h1>${L(t.title)}</h1>
+   <div class="big"><div class="lab">${ui('big')}</div><p>${L(t.big)}</p>${says(t.big_a)}</div>
+   <ol class="stepper" aria-label="Steps">${st('learn',1,'Learn')}${st('try',2,'Try it')}${st('check',3,'Check')}</ol>
+   <div id="step"></div>`;
+  $$('[data-step]').forEach(b=>b.onclick=()=>{location.hash=`#/t/${n}/${b.dataset.step}`});
+  const box=$('#step');
+  if(step==='learn')learnStep(t,box);else if(step==='try')tryStep(t,box);else checkStep(t,box);
+}
+function learnStep(t,box){
+  box.innerHTML=`<ol class="cards">${t.learn.map((c,i)=>`<li class="card"><div class="num"><b>${i+1}</b><span aria-hidden="true">${c.icon}</span></div><div class="c">
+    <h3>${L(c.h)}</h3><p>${L(c.t)}</p>${c.code?`<pre class="code">${hl(c.code,c.lang)}</pre>`:''}${c.shape?SHAPES[c.shape]:''}${c.locks?LOCKS:''}${says(c.a)}</div></li>`).join('')}</ol>
+   <div class="btnrow"><button class="btn primary" id="nx">Next: Try it</button></div>`;
+  $('#nx').onclick=()=>{stars(t.id).l=1;save();location.hash=`#/t/${t.id}/try`};
+}
+function tryStep(t,box){
+  const c=t.tryit;
+  box.innerHTML=`<h2 style="margin-top:0">${L(c.h)}</h2><p>${L(c.t)}</p>${says(c.a)}
+    <div class="act" id="act" style="margin-top:12px"></div>
+    <div class="btnrow"><button class="btn primary" id="nx" ${stars(t.id).t?'':'disabled'}>Next: Check</button>
+    <span class="locked" id="lk">${stars(t.id).t?'':'Finish the activity to unlock the check.<span class="lo" lang="lo">ເຮັດກິດຈະກຳໃຫ້ສຳເລັດ ເພື່ອເປີດການກວດ.</span>'}</span></div>`;
+  const finish=()=>{stars(t.id).t=1;save();$('#nx').disabled=false;$('#lk').innerHTML='Done. You can go to the check.<span class="lo" lang="lo">ສຳເລັດ. ເຈົ້າໄປກວດໄດ້.</span>';
+    const b=$('.stepper [data-step="try"] .star');if(b){b.textContent='★';b.classList.add('on')}$('.stepper [data-step="check"]').disabled=false};
+  $('#nx').onclick=()=>{location.hash=`#/t/${t.id}/check`};
+  ACT[c.type]($('#act'),c,finish);
+}
+function checkStep(t,box){
+  const qs=t.check;let answered=0,firstAll=true;
+  box.innerHTML=`<div id="qs"></div><div id="res"></div>`;
+  const qbox=$('#qs');
+  qs.forEach((q,i)=>{const d=document.createElement('div');qbox.appendChild(d);
+    askQ(d,q,i+1,qs.length,2,(first)=>{answered++;if(!first)firstAll=false;if(answered===qs.length)done()})});
+  function done(){
+    const s=stars(t.id);if(firstAll)s.c=1;S.done[t.id]=1;save();
+    const sb=$('.stepper [data-step="check"] .star');if(sb&&firstAll){sb.textContent='★';sb.classList.add('on')}
+    const nt=T[t.id];
+    $('#res').innerHTML=`<div class="result"><h3>${firstAll?'All correct first time. You earned the star.':'Topic finished. Get every answer right first time to earn the star.'}</h3>
+     <p class="lo" lang="lo">${firstAll?'ຖືກທັງໝົດຕັ້ງແຕ່ເທື່ອທຳອິດ. ເຈົ້າໄດ້ດາວ.':'ສຳເລັດຫົວຂໍ້ນີ້. ຕອບຖືກທຸກຂໍ້ຕັ້ງແຕ່ເທື່ອທຳອິດ ເພື່ອໄດ້ດາວ.'}</p>
+     <div class="btnrow">${nt?`<a class="btn primary" href="#/t/${nt.id}">Next topic: ${esc(nt.short)}</a>`:`<a class="btn primary" href="#/cards">Go to the flashcards</a>`}
+     ${firstAll?'':`<button class="btn" id="again">Try the check again</button>`}<a class="btn text" href="#/map">Back to the map</a></div></div>`;
+    const a=$('#again');if(a)a.onclick=()=>{checkStep(t,box);window.scrollTo(0,box.offsetTop-80)};
+  }
+}
+
+/* ---------- one question ---------- */
+function askQ(el,q,num,of,tries,onDone,label){
+  const order=shuffle(q.o.map((_,i)=>i));let used=0,first=true;
+  el.className='q';
+  el.innerHTML=`<div class="qn">${label||`Question ${num} of ${of}`}</div><h3>${L(q.q)}</h3>${says(q.a)}
+    <div class="opts">${order.map(i=>`<button class="opt${/[=()"#<>]/.test(q.o[i][0])?' mono':''}" data-i="${i}">${LB(q.o[i])}</button>`).join('')}</div><div class="fb" aria-live="polite"></div>`;
+  const fb=$('.fb',el);
+  $$('.opt',el).forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;used++;
+    if(i===0){b.classList.add('right');lock();fb.className='fb show ok';fb.innerHTML=`<b>${ui('right')}</b>${L(q.why)}`;onDone(first);return}
+    first=false;b.classList.add('wrong');b.disabled=true;
+    if(used>=tries){lock();const r=$(`.opt[data-i="0"]`,el);r.classList.add('right');fb.className='fb show bad';
+      fb.innerHTML=`<b>${ui('answer')} ${esc(q.o[0][0])}</b>${L(q.why)}`;onDone(false)}
+    else{fb.className='fb show bad';fb.innerHTML=`<b>${ui('again')}</b>`}
+  });
+  function lock(){$$('.opt',el).forEach(x=>x.disabled=true)}
+}
+
+/* ---------- activities ---------- */
+const ACT={};
+const msg=(el,ok,en,lo)=>{el.className='msg '+(ok?'ok':'bad');el.innerHTML=`${esc(en)}${lo?`<span class="lo" lang="lo">${esc(lo)}</span>`:''}`};
+
+ACT.sort=(el,c,finish)=>{
+  let sel=null;const placed=new Set();
+  const order=shuffle(c.cards.map((_,i)=>i));
+  el.innerHTML=`<div class="chips" id="cs">${order.map(i=>`<button class="chip${/[=()"#<>]/.test(c.cards[i][0][0])?' mono':''}" data-i="${i}" aria-pressed="false">${LB(c.cards[i][0])}</button>`).join('')}</div>
+    <div class="boxes">${c.boxes.map((b,j)=>`<button class="box" data-j="${j}"><h4>${LB(b)}</h4><div class="in"></div></button>`).join('')}</div><div class="msg" aria-live="polite"></div>`;
+  const m=$('.msg',el);
+  $$('#cs .chip',el).forEach(b=>b.onclick=()=>{sel=+b.dataset.i;$$('#cs .chip',el).forEach(x=>x.setAttribute('aria-pressed',x===b));m.textContent=''});
+  $$('.box',el).forEach(bx=>bx.onclick=()=>{
+    if(sel===null){msg(m,false,'Tap a card first.','ແຕະບັດກ່ອນ.');return}
+    const j=+bx.dataset.j;
+    if(c.cards[sel][1]===j){placed.add(sel);$('.in',bx).insertAdjacentHTML('beforeend',`<span>${esc(c.cards[sel][0][0])}</span>`);
+      $(`#cs .chip[data-i="${sel}"]`,el).remove();sel=null;
+      if(placed.size===c.cards.length){msg(m,true,'All sorted. Well done.','ຈັດກຸ່ມຄົບແລ້ວ. ເກັ່ງຫຼາຍ.');finish()}else msg(m,true,'Yes, that fits.','ແມ່ນແລ້ວ, ເໝາະສົມ.')}
+    else msg(m,false,'Not that box. Read the card again and try another box.','ບໍ່ແມ່ນກ່ອງນັ້ນ. ອ່ານບັດອີກ ແລ້ວລອງກ່ອງອື່ນ.');
+  });
+};
+
+ACT.order=(el,c,finish)=>{
+  let at=0;const order=shuffle(c.items.map((_,i)=>i));
+  el.innerHTML=`<div class="chips" id="os">${order.map(i=>`<button class="chip" data-i="${i}">${LB(c.items[i])}</button>`).join('')}</div>
+    <h3 style="margin-top:14px">Your order<span class="lo" lang="lo">ລຳດັບຂອງເຈົ້າ</span></h3><ol class="olist" id="ol"></ol><div class="msg" aria-live="polite"></div>`;
+  const m=$('.msg',el);
+  $$('#os .chip',el).forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    if(i===at){$('#ol',el).insertAdjacentHTML('beforeend',`<li>${LB(c.items[i])}</li>`);b.remove();at++;
+      if(at===c.items.length){msg(m,true,'Every step is in the right order.','ທຸກຂັ້ນຕອນຢູ່ໃນລຳດັບທີ່ຖືກຕ້ອງ.');finish()}else m.textContent=''}
+    else msg(m,false,'Not yet. Which step comes next?','ຍັງບໍ່ແມ່ນ. ຂັ້ນຕອນໃດມາຕໍ່ໄປ?');
+  });
+};
+
+ACT.comment=(el,c,finish)=>{
+  const LINES=['print("Hello, Year 7!")','print("I am a robot.")','print("Sabaidee from my computer")','print("Beep boop")'];
+  const TARGET='Hello, Year 7!\nSabaidee from my computer';const on=[1,1,1,1];
+  el.innerHTML=`<div class="frow"><div style="flex:1;min-width:260px"><h3>Editor</h3><p class="muted">Tap a line to add or remove a #.<span class="lo" lang="lo">ແຕະແຖວເພື່ອເພີ່ມ ຫຼື ລຶບ #.</span></p><div class="lines" id="ls"></div>
+    <div class="btnrow" style="margin-top:10px"><button class="btn" id="run">Run</button></div></div>
+    <div style="flex:1;min-width:240px"><h3>Target output<span class="lo" lang="lo">Output ເປົ້າໝາຍ</span></h3><div class="shell">${esc(TARGET)}</div>
+    <h3 style="margin-top:12px">Shell</h3><div class="shell" id="sh"></div></div></div><div class="msg" aria-live="polite"></div>`;
+  const paint=()=>{$('#ls',el).innerHTML=LINES.map((l,i)=>`<button class="line" data-i="${i}"><span class="ln">${i+1}</span><span>${on[i]?hl(l):`<span style="color:#6b7480">${esc('# '+l)}</span>`}</span></button>`).join('');
+    $$('#ls .line',el).forEach(b=>b.onclick=()=>{on[+b.dataset.i]^=1;paint()})};
+  paint();const m=$('.msg',el);
+  $('#run',el).onclick=()=>{const out=LINES.filter((_,i)=>on[i]).map(l=>l.slice(7,-2)).join('\n');$('#sh',el).textContent=out||' ';
+    if(out===TARGET){msg(m,true,'The shell matches. Python skipped your comments.','Shell ກົງກັນ. Python ຂ້າມ comment ຂອງເຈົ້າ.');finish()}
+    else msg(m,false,'Not a match yet. Which lines should Python skip?','ຍັງບໍ່ກົງກັນ. Python ຄວນຂ້າມແຖວໃດ?')};
+};
+
+ACT.greet=(el,c,finish)=>{
+  const names=new Set();
+  el.innerHTML=`<div class="frow"><div style="flex:1;min-width:250px">
+    <div class="field"><label for="gn">Your name<span class="lo" lang="lo">ຊື່ຂອງເຈົ້າ</span></label><input id="gn" placeholder="e.g. Nok" maxlength="20" autocomplete="off"><span class="err" id="gne"></span></div>
+    <div class="field"><label for="gf">Favourite food<span class="lo" lang="lo">ອາຫານທີ່ມັກ</span></label><input id="gf" placeholder="e.g. laap" maxlength="20" autocomplete="off"><span class="err" id="gfe"></span></div>
+    <button class="btn" id="run">Run</button></div>
+    <div style="flex:1.3;min-width:260px"><pre class="code">${hl('name = input("What is your name? ")\nfood = input("Favourite food? ")\nprint(f"Hi {name}! I like {food} too.")')}</pre>
+    <div class="vars" id="vs"><div class="vbox"><small>name</small><b>?</b></div><div class="vbox"><small>food</small><b>?</b></div></div>
+    <div class="shell" id="sh"></div></div></div><div class="msg" aria-live="polite"></div>`;
+  const m=$('.msg',el);
+  $('#run',el).onclick=()=>{const n=$('#gn',el).value.trim(),f=$('#gf',el).value.trim();
+    $('#gne',el).textContent=n?'':'Type a name first.';$('#gfe',el).textContent=f?'':'Type a food first.';if(!n||!f)return;
+    $('#vs',el).innerHTML=`<div class="vbox"><small>name</small><b>"${esc(n)}"</b></div><div class="vbox"><small>food</small><b>"${esc(f)}"</b></div>`;
+    $('#sh',el).innerHTML=`What is your name? <span class="in">${esc(n)}</span>\nFavourite food? <span class="in">${esc(f)}</span>\nHi ${esc(n)}! I like ${esc(f)} too.`;
+    names.add(n.toLowerCase());
+    if(names.size>=2){msg(m,true,'The value in the name box changed, but the label stayed the same.','ຄ່າໃນກ່ອງ name ປ່ຽນ, ແຕ່ປ້າຍຊື່ຢູ່ຄືເກົ່າ.');finish()}
+    else msg(m,true,'It works. Now change the name and run it again.','ໃຊ້ໄດ້. ຕອນນີ້ປ່ຽນຊື່ ແລ້ວແລ່ນອີກ.')};
+};
+
+ACT.branch=(el,c,finish)=>{
+  const CODE=['temp = int(input("Temperature? "))','if temp >= 35:','    print("Very hot. Drink water!")','elif temp >= 25:','    print("Warm day.")','else:','    print("Cool day.")'];
+  const seen=new Set();
+  el.innerHTML=`<div class="frow"><div style="min-width:220px"><div class="field"><label for="tp">Temperature<span class="lo" lang="lo">ອຸນຫະພູມ</span></label><input id="tp" inputmode="numeric" placeholder="e.g. 30" maxlength="4" autocomplete="off"><span class="err" id="tpe"></span></div>
+    <button class="btn" id="run">Run</button>
+    <ul class="ticks" id="tk"><li data-b="2"><i>○</i>Very hot</li><li data-b="4"><i>○</i>Warm day</li><li data-b="6"><i>○</i>Cool day</li></ul></div>
+    <div style="flex:1;min-width:260px"><div class="lines" id="ls">${CODE.map((l,i)=>`<div class="line" data-i="${i}"><span class="ln">${i+1}</span><span>${hl(l)}</span></div>`).join('')}</div><div class="shell" id="sh"></div></div></div>
+    <div class="msg" aria-live="polite"></div>`;
+  const m=$('.msg',el);
+  $('#run',el).onclick=()=>{const v=$('#tp',el).value.trim();
+    if(!/^-?\d+$/.test(v)){$('#tpe',el).textContent='Type a whole number, like 30. int() needs digits.';return}
+    $('#tpe',el).textContent='';const t=+v;const b=t>=35?2:t>=25?4:6;
+    $$('#ls .line',el).forEach(x=>x.classList.toggle('hit',[0,1,b].includes(+x.dataset.i)||(b>=4&&+x.dataset.i===3)||(b===6&&+x.dataset.i===5)));
+    $('#sh',el).innerHTML=`Temperature? <span class="in">${esc(v)}</span>\n${esc(CODE[b].trim().slice(7,-2))}`;
+    seen.add(b);$(`#tk li[data-b="${b}"]`,el).classList.add('on');$(`#tk li[data-b="${b}"] i`,el).textContent='✓';
+    if(seen.size===3){msg(m,true,'You reached all three branches.','ເຈົ້າໄປຮອດທັງສາມ branch.');finish()}
+    else msg(m,true,`Branch reached. ${3-seen.size} to go.`,`ໄປຮອດ branch ແລ້ວ. ເຫຼືອອີກ ${3-seen.size}.`)};
+};
+
+ACT.post=(el,c,finish)=>{
+  const W=[['Mango','Tiger','Pencil','Cloud','River','Rocket','Lotus','Noodle'],['Purple','Silent','Jumping','Frozen','Lucky','Golden','Sleepy','Brave'],['Elephant','Drum','Bridge','Kite','Mountain','Scooter','Teapot','Comet']];
+  let deleted=false,rolled=false;const chk=()=>{if(deleted&&rolled)finish()};
+  el.innerHTML=`<h3>1. Delete the post<span class="lo" lang="lo">1. ລຶບໂພສ</span></h3>
+    <div class="post" id="pc"><b>Nok</b> <span class="muted">2 min ago</span><p>Look at my new puppy! We live next to the school gate. 🐶</p></div>
+    <div class="btnrow" style="margin-top:10px"><button class="btn" id="del">Delete the post</button></div><div id="cp"></div>
+    <h3 style="margin-top:20px">2. Build a practice passphrase<span class="lo" lang="lo">2. ສ້າງ passphrase ສຳລັບຝຶກ</span></h3>
+    <p class="muted">Practice only. Make your real one at home and never share it.<span class="lo" lang="lo">ສຳລັບຝຶກເທົ່ານັ້ນ. ສ້າງອັນແທ້ຢູ່ເຮືອນ ແລະ ຢ່າແບ່ງປັນ.</span></p>
+    <button class="btn" id="roll">Pick 3 random words</button><div id="pp"></div><div class="msg" aria-live="polite"></div>`;
+  $('#del',el).onclick=()=>{if(deleted)return;deleted=true;$('#pc',el).classList.add('gone');$('#pc',el).innerHTML='<p>This post was deleted.</p>';$('#del',el).disabled=true;
+    $('#cp',el).innerHTML=`<p style="margin-top:10px"><b>But copies are still out there:</b><span class="lo" lang="lo">ແຕ່ສຳເນົາຍັງຢູ່:</span></p><div class="copies"><div>📸 A screenshot on a classmate's phone<span class="lo" lang="lo">ພາບໜ້າຈໍໃນໂທລະສັບຂອງໝູ່ຮ່ວມຫ້ອງ</span></div><div>🔁 A copy shared in a group chat<span class="lo" lang="lo">ສຳເນົາທີ່ແບ່ງປັນໃນກຸ່ມແຊັດ</span></div><div>🗄️ A copy saved on the app's server<span class="lo" lang="lo">ສຳເນົາທີ່ບັນທຶກໄວ້ໃນເຊີບເວີຂອງແອັບ</span></div></div>
+    <p class="muted" style="margin-top:8px">The post also gave away where Nok lives. That is personal information.<span class="lo" lang="lo">ໂພສນີ້ຍັງບອກບ່ອນທີ່ນົກອາໄສ. ນັ້ນແມ່ນຂໍ້ມູນສ່ວນຕົວ.</span></p>`;chk()};
+  $('#roll',el).onclick=()=>{const w=W.map(a=>a[Math.floor(Math.random()*a.length)]);rolled=true;
+    $('#pp',el).innerHTML=`<div class="pp">${w.join('')}</div><p class="muted">${w.join('').length} characters. Long, random and easy to remember.<span class="lo" lang="lo">ຍາວ, ສຸ່ມ ແລະ ຈື່ງ່າຍ.</span></p>`;
+    if(deleted)msg($('.msg',el),true,'Both parts done.','ສຳເລັດທັງສອງສ່ວນ.');chk()};
+};
+
+ACT.testtable=(el,c,finish)=>{
+  const CODE=['topic = input("Topic? ")','if topic == "lunch":','    print("Lunch is in the canteen.")','elif topic == "library":','    print("Borrow books at break time.")','elif topic == "sport":','    print("Bring your PE kit.")','else:','    print("Sorry, ask a teacher.")'];
+  const rows=[['lunch','lunch'],['library','library'],['sport','sport'],['Something else (else branch)','ອັນອື່ນ (branch else)'],['Unusual input, like Lunch with a capital L','Input ແປກໆ, ເຊັ່ນ Lunch ທີ່ມີ L ໃຫຍ່']];
+  const got=new Set();
+  el.innerHTML=`<div class="frow"><div style="min-width:230px"><div class="field"><label for="tt">Topic to test<span class="lo" lang="lo">ຫົວຂໍ້ທີ່ຈະທົດສອບ</span></label><input id="tt" placeholder="e.g. lunch" maxlength="20" autocomplete="off"><span class="err" id="tte"></span></div>
+    <button class="btn" id="run">Run test</button>
+    <h3 style="margin-top:14px">Test table<span class="lo" lang="lo">ຕາຕະລາງທົດສອບ</span></h3><ul class="ticks" id="tk">${rows.map((r,i)=>`<li data-r="${i}"><i>○</i>${LB(r)}</li>`).join('')}</ul></div>
+    <div style="flex:1;min-width:260px"><div class="lines" id="ls">${CODE.map((l,i)=>`<div class="line" data-i="${i}"><span class="ln">${i+1}</span><span>${hl(l)}</span></div>`).join('')}</div><div class="shell" id="sh"></div></div></div><div class="msg" aria-live="polite"></div>`;
+  const m=$('.msg',el);
+  $('#run',el).onclick=()=>{const v=$('#tt',el).value;if(!v.trim()){$('#tte',el).textContent='Type a topic to test first.';return}$('#tte',el).textContent='';
+    const map={lunch:[1,2,0],library:[3,4,1],sport:[5,6,2]};let hit,row;
+    if(map[v]){hit=map[v];row=hit[2]}else{hit=[7,8];row=3}
+    $$('#ls .line',el).forEach(x=>{const i=+x.dataset.i;x.classList.toggle('hit',i===0||i===hit[0]||i===hit[1])});
+    $('#sh',el).innerHTML=`Topic? <span class="in">${esc(v)}</span>\n${esc(CODE[hit[1]].trim().slice(7,-2))}`;
+    const mark=r=>{got.add(r);const li=$(`#tk li[data-r="${r}"]`,el);li.classList.add('on');$('i',li).textContent='✓'};
+    mark(row);
+    if(!map[v]&&map[v.trim().toLowerCase()]){mark(4);msg(m,true,`Bug found: "${v}" went to the else branch. Testing found it.`,'ພົບ bug: input ນີ້ໄປ branch else. ການທົດສອບພົບມັນ.')}
+    else msg(m,true,'Test recorded.','ບັນທຶກການທົດສອບແລ້ວ.');
+    if(got.size===rows.length){msg(m,true,'Every row of the test table is ticked.','ທຸກແຖວຂອງຕາຕະລາງທົດສອບຖືກໝາຍແລ້ວ.');finish()}};
+};
+
+/* ---------- flashcards ---------- */
+function renderCards(){
+  document.body.style.cssText='';
+  let filter=store.get('cf',0),deck=[],flipped=false;
+  const build=()=>{deck=shuffle(FLASH.map((_,i)=>i).filter(i=>!filter||FLASH[i].t===filter));flipped=false};
+  build();
+  view.innerHTML=`<h1>Flashcards<span class="lo" lang="lo">ບັດຄຳສັບ</span></h1><p>Tap the card to flip it. Cards marked Not yet come back later.<span class="lo" lang="lo">ແຕະບັດເພື່ອພິກ. ບັດທີ່ໝາຍວ່າ ຍັງບໍ່ທັນ ຈະກັບມາອີກ.</span></p>
+   <div class="chips" id="flt" role="group" aria-label="Topic filter"><button class="chip" data-f="0">All</button>${T.map(t=>`<button class="chip" data-f="${t.id}">${t.id}. ${esc(t.short)}</button>`).join('')}</div>
+   <div id="fcw" style="margin-top:16px"></div>`;
+  $$('#flt .chip').forEach(b=>{b.setAttribute('aria-pressed',+b.dataset.f===filter);b.onclick=()=>{filter=+b.dataset.f;store.set('cf',filter);$$('#flt .chip').forEach(x=>x.setAttribute('aria-pressed',x===b));build();show()}});
+  function show(){
+    const w=$('#fcw');
+    if(!deck.length){w.innerHTML=`<div class="result"><h3>You know every card in this set.<span class="lo" lang="lo">ເຈົ້າຮູ້ທຸກບັດໃນຊຸດນີ້.</span></h3><div class="btnrow"><button class="btn primary" id="rs">Start the set again</button></div></div>`;$('#rs').onclick=()=>{build();show()};return}
+    const c=FLASH[deck[0]],t=T[c.t-1];
+    w.innerHTML=`<p class="muted">${deck.length} card${deck.length>1?'s':''} left. Topic ${c.t}: ${esc(t.short)}</p>
+     <button class="fc" id="fc" style="${tvars(t)}" aria-label="Flashcard. Tap to flip.">${flipped?`<span class="back">${L(c.b)}</span><small>${esc(c.f[0])}</small>`:`<span class="front">${L(c.f)}</span><small>Tap to see the meaning</small>`}</button>
+     ${says(c.a)}
+     <div class="btnrow"><button class="btn" id="ny">Not yet</button><button class="btn primary" id="ik">I know it</button></div>`;
+    $('#fc').onclick=()=>{flipped=!flipped;show()};
+    $('#ik').onclick=()=>{deck.shift();flipped=false;show()};
+    $('#ny').onclick=()=>{deck.push(deck.shift());flipped=false;show()};
+  }
+  show();
+}
+
+/* ---------- final challenge ---------- */
+function renderFinal(){
+  document.body.style.cssText='';
+  const pool=[];T.forEach(t=>t.check.forEach(q=>pool.push({q,t:t.id})));
+  view.innerHTML=`<h1>Final challenge<span class="lo" lang="lo">ສິ່ງທ້າທາຍສຸດທ້າຍ</span></h1>
+   <p>15 questions from every topic. You get one try each. Keep your streak going.<span class="lo" lang="lo">15 ຄຳຖາມຈາກທຸກຫົວຂໍ້. ເຈົ້າມີໂອກາດຕອບເທື່ອດຽວ. ຮັກສາຄວາມຕໍ່ເນື່ອງໄວ້.</span></p>
+   ${store.get('best',null)!==null?`<p class="muted">Your best score: ${store.get('best')} of 15</p>`:''}
+   <div class="btnrow"><button class="btn primary" id="go">Start the challenge</button></div><div id="fz"></div>`;
+  $('#go').onclick=()=>{$('.btnrow').remove();run(shuffle(pool).slice(0,15))};
+  function run(qs){
+    let i=0,score=0,streak=0,best=0;const missed=new Set();
+    const fz=$('#fz');
+    function next(){
+      if(i===qs.length)return end();
+      const it=qs[i];
+      fz.innerHTML=`<div class="streak"><span>Question <b>${i+1}</b> of 15</span><span>Score <b>${score}</b></span><span>Streak <b>${streak}</b> 🔥</span></div><div id="fq"></div><div class="btnrow" id="nr"></div>`;
+      askQ($('#fq'),it.q,i+1,15,1,(ok)=>{
+        if(ok){score++;streak++;best=Math.max(best,streak)}else{streak=0;missed.add(it.t)}
+        $('.streak').innerHTML=`<span>Question <b>${i+1}</b> of 15</span><span>Score <b>${score}</b></span><span>Streak <b>${streak}</b> 🔥</span>`;
+        $('#nr').innerHTML=`<button class="btn primary" id="nq">${i===qs.length-1?'See my score':'Next question'}</button>`;
+        $('#nq').onclick=()=>{i++;next();window.scrollTo(0,0)};$('#nq').focus();
+      },`Topic ${it.t}: ${T[it.t-1].short}`);
+    }
+    function end(){
+      const prev=store.get('best',null);if(prev===null||score>prev)store.set('best',score);
+      fz.innerHTML=`<div class="result"><h2 style="margin-top:0">You scored ${score} of 15<span class="lo" lang="lo">ເຈົ້າໄດ້ ${score} ຈາກ 15</span></h2><p>Best streak: ${best}</p>
+       ${missed.size?`<p><b>Topics to review:</b><span class="lo" lang="lo">ຫົວຂໍ້ທີ່ຄວນທົບທວນ:</span></p><div class="btnrow" style="margin-top:6px">${[...missed].sort((a,b)=>a-b).map(n=>`<a class="btn" href="#/t/${n}/learn">Review: ${esc(T[n-1].short)}</a>`).join('')}</div>`:'<p>No topics to review. Excellent.</p>'}
+       <div class="btnrow"><button class="btn primary" id="ag">Try a new challenge</button></div></div>`;
+      $('#ag').onclick=()=>run(shuffle(pool).slice(0,15));
+    }
+    next();
+  }
+}
+
+route();
+})();
+</script>
+</body>
+</html>
